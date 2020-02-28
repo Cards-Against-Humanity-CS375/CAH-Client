@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import InGameScreen from './InGameScreen/InGameScreen';
+import InGameScreen from './Views/InGameScreen/InGameScreen';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Player from './Models/Player'

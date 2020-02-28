@@ -11,6 +11,16 @@ class Main extends Component {
         this.state = {
 
         }
+
+        // This binding is necessary to make `this` work in the callback
+        this.btnStartGame = this.btnStartGame.bind(this);
+    }
+
+    btnStartGame() {
+        this.props.socket.emit('message', {
+            type: 'GAME_START',
+            content: "Hey Mr. Server! Please start the game!"
+        })
     }
 
     render() {
@@ -26,7 +36,7 @@ class Main extends Component {
             if (this.props.isFirstPlayer) {
                 return (
                     <div className="d-flex flex-column">
-                        <Button variant="primary" onClick={() => true}>Start Game</Button>
+                        <Button variant="primary" onClick={this.btnStartGame}>Start Game</Button>
                     </div>
                 )
             }

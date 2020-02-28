@@ -6,9 +6,9 @@ import TimerProgressBar from "./SubComponents/ProgressBar"
 import NavBar from "./SubComponents/NavBar"
 import MessageBox from "./SubComponents/MessageBox"
 import Main from "./SubComponents/Main"
-import Player from "../Models/Player"
-import WhiteCard from "../Models/WhiteCard"
-import BlackCard from "../Models/BlackCard"
+import Player from "../../Models/Player"
+import WhiteCard from "../../Models/WhiteCard"
+import BlackCard from "../../Models/BlackCard"
 
 /**
  * The main code for InGameScreen
@@ -112,7 +112,7 @@ class InGameScreen extends Component {
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
                     <NavBar points={this.props.current_player.points} players={this.state.players} />
-                    <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player}/>
+                    <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket}/>
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>
             </>
