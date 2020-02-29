@@ -30,7 +30,9 @@ class InGameScreen extends Component {
             isJudgeTurn: false,
             progress: 0,
             time_passed: 0,
-            first_player: false
+            first_player: false,
+            played_cards: [],
+            time_to_choose_winning_card: false
         }
 
     }
@@ -55,7 +57,7 @@ class InGameScreen extends Component {
             this.setState(prev_state => ({
                 current_player: new Player(this.socket.io, prev_state.current_player.name)
             }))
-            
+
             // * Telling the server that you just joined the name
             this.socket.emit('message', {
                 "type": "NEW_CONNECTION",
@@ -82,24 +84,22 @@ class InGameScreen extends Component {
                         break
                     case "GAME_START":
                         console.log(msg.content)
-                        
-                        // msg.content.cards.forEach(card => {
-                        //     const newCard = new WhiteCard(card.response)
-                        //     setWhiteCards(prev_whiteCards => prev_whiteCards.push(newCard))
-                        // })
-                        // setGameOver(prev_gameOver => false)
                         const cards = msg.content.cards.map((cardObj => new WhiteCard(cardObj.response)))
-                        console.log(cards)
                         this.setState(prev_state => ({
-                            gameOn : true,
-                            whiteCards : cards,
+                            gameOn: true,
+                            whiteCards: cards,
                         }))
-                        console.log(this.state.whiteCards) // Expect array of 5 objects.
                         break
                     case "NEW_ROUND":
                         console.log(msg.content)
-                        // setIsJudge(prev_is_judge => msg.content.judge_id == props.current_player.id)
                         break
+                    case "ROUND_TIMEOUT":
+                        console.log(msg.content)
+                        const played_cards = msg.content.played_cards.map((cardObj) => new WhiteCard(cardObj.response))
+                        this.setState(prev_state => ({
+                            time_to_choose_winning_card: true,
+                            played_cards: played_cards
+                        }))
                     case "GAME_OVER":
                         console.log(msg.content)
                         // TODO: Show popups
@@ -120,7 +120,7 @@ class InGameScreen extends Component {
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
                     <NavBar points={this.props.current_player.points} players={this.state.players} />
-                    <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
+                    <Main current_player={this.state.current_player} gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} played_cards={this.state.played_cards} time_to_choose_winning_card={this.state.time_to_choose_winning_card} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>
             </>
