@@ -88,9 +88,11 @@ class InGameScreen extends Component {
                         //     setWhiteCards(prev_whiteCards => prev_whiteCards.push(newCard))
                         // })
                         // setGameOver(prev_gameOver => false)
+                        const cards = msg.content.cards.map((cardObj => new WhiteCard(cardObj.response)))
+                        console.log(cards)
                         this.setState(prev_state => ({
-                            //gameOn : true,
-                            whiteCards : msg.content.cards,
+                            gameOn : true,
+                            whiteCards : cards,
                         }))
                         console.log(this.state.whiteCards) // Expect array of 5 objects.
                         break
@@ -118,7 +120,7 @@ class InGameScreen extends Component {
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
                     <NavBar points={this.props.current_player.points} players={this.state.players} />
-                    <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket}/>
+                    <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>
             </>

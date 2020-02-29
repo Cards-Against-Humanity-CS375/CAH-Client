@@ -11,7 +11,7 @@ const CardDeck = (props) => {
             <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem' }}>
                 <Card.Body className="d-flex flex-column align-items-start">
                     <Card.Text>
-                        {whiteCard}
+                        {whiteCard.response}
                     </Card.Text>
                 </Card.Body>
                 <Card.Footer className="text-muted">

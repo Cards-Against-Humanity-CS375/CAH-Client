@@ -30,8 +30,8 @@ class Main extends Component
         if (this.props.gameOn) {
             return (
                 <div className="d-flex flex-column align-items-center">
-                    <ShowPrompt blackCard={this.state.blackCard} />
-                    <CardDeck whiteCards={this.state.whiteCards} />
+                    <ShowPrompt blackCard={this.props.blackCard} />
+                    <CardDeck whiteCards={this.props.whiteCards} />
                 </div>
             )
         }

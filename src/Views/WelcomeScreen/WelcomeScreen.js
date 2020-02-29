@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Grid, TextField, Button, Box, makeStyles, Container } from '@material-ui/core';
 import io from 'socket.io-client';
-import './App.css';
 
 const useStyles = makeStyles(theme => ({
     textWelcome: {
