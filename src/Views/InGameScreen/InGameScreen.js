@@ -82,11 +82,17 @@ class InGameScreen extends Component {
                         break
                     case "GAME_START":
                         console.log(msg.content)
+                        
                         // msg.content.cards.forEach(card => {
                         //     const newCard = new WhiteCard(card.response)
                         //     setWhiteCards(prev_whiteCards => prev_whiteCards.push(newCard))
                         // })
                         // setGameOver(prev_gameOver => false)
+                        this.setState(prev_state => ({
+                            //gameOn : true,
+                            whiteCards : msg.content.cards,
+                        }))
+                        console.log(this.state.whiteCards) // Expect array of 5 objects.
                         break
                     case "NEW_ROUND":
                         console.log(msg.content)
