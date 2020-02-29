@@ -1,12 +1,13 @@
 import React, { Component } from "react"
-
 import ShowPrompt from "./ShowPrompt"
 import CardDeck from "./CardDeck"
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 
-class Main extends Component {
-    constructor(props) {
+class Main extends Component
+{
+    constructor(props)
+    {
         super(props)
         this.state = {
 
@@ -16,14 +17,16 @@ class Main extends Component {
         this.btnStartGame = this.btnStartGame.bind(this);
     }
 
-    btnStartGame() {
+    btnStartGame()
+    {
         this.props.socket.emit('message', {
             type: 'GAME_START',
             content: "Hey Mr. Server! Please start the game!"
         })
     }
 
-    render() {
+    render()
+    {
         if (this.props.gameOn) {
             return (
                 <div className="d-flex flex-column align-items-center">
