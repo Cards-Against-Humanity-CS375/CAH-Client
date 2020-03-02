@@ -45,9 +45,11 @@ class Main extends Component
             }
             else {
                 return (
-                    <div className="d-flex align-items-center justify-content-center flex-fill">
+                    <div className="d-flex flex-column my-1 align-items-center justify-content-center flex-fill">
                         <Spinner animation="border" />
+                        <div>Waiting for host to start the game...</div>
                     </div>
+                    
                 )
             }
         }
