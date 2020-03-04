@@ -97,13 +97,8 @@ class InGameScreen extends Component
                         const cards = msg.content.cards.map((cardObj => new WhiteCard(cardObj.response)))
                         console.log(cards)
                         this.setState(prev_state => ({
-<<<<<<< HEAD
-                            gameOn : true,
-                            whiteCards : cards,
-=======
-                            //gameOn : true,
-                            whiteCards: msg.content.cards,
->>>>>>> QCleanCodeInGame
+                            gameOn: true,
+                            whiteCards: cards,
                         }))
                         console.log(this.state.whiteCards) // Expect array of 5 objects.
                         break
@@ -137,11 +132,7 @@ class InGameScreen extends Component
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
                     <NavBar points={this.props.current_player.points} players={this.state.players} />
-<<<<<<< HEAD
                     <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
-=======
-                    <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket} />
->>>>>>> QCleanCodeInGame
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>
             </>
