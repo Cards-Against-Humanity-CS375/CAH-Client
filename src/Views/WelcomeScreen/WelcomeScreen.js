@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import {Router, route} from "react-router";
 import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import { Grid, TextField, Button, Box, makeStyles, Container } from '@material-ui/core';
 import io from 'socket.io-client';
 
@@ -27,16 +29,24 @@ class Welcome extends Component
         })
     }
 
-    onSubmit = () =>
+    onSubmit = (props) =>
     {
         var name = this.state.name;
         if (name == '') {
             name = 'I forgot to put a name.';
         };
-        this.props.socket.emit('message', {
-            type: "NEW_USER",
-            content: name
-        });
+            // <switch>
+            //     <Route exact path="/ingame" component={InGameScreen} />
+            // </switch>
+            // props.history.push("/ingame");
+            this.props.history.push("/ingame");
+            // this.props.navigation.navigate('/ingame')
+        // this.props.socket.emit('message', {
+        //     type: "NEW_USER",
+        //     content: name
+        // });
+            
+
     }
 
     render()
