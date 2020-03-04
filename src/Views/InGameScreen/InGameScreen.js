@@ -14,8 +14,10 @@ import BlackCard from "../../Models/BlackCard"
  * The main code for InGameScreen
  * @param {} props : contains information for current_player, score
  */
-class InGameScreen extends Component {
-    constructor(props) {
+class InGameScreen extends Component
+{
+    constructor(props)
+    {
         super(props)
         this.state = {
             current_player: props.current_player,
@@ -35,13 +37,15 @@ class InGameScreen extends Component {
 
     }
 
-    componentDidMount() {
+    componentDidMount()
+    {
         this.setState({
             timeout: 60,
             time_passed: 1
         })
 
-        this.state.timer = setInterval(() => {
+        this.state.timer = setInterval(() =>
+        {
             this.setState((prev_state) => ({
                 time_passed: prev_state.time_passed + 1,
                 progress: prev_state.time_passed / prev_state.timeout * 100
@@ -51,18 +55,20 @@ class InGameScreen extends Component {
 
         this.socket = socketIOClient(this.state.endpoint)
 
-        this.socket.on('connect', () => {
+        this.socket.on('connect', () =>
+        {
             this.setState(prev_state => ({
                 current_player: new Player(this.socket.io, prev_state.current_player.name)
             }))
-            
+
             // * Telling the server that you just joined the name
             this.socket.emit('message', {
                 "type": "NEW_CONNECTION",
                 "content": this.props.current_player.name
             })
 
-            this.socket.on('message', function (msg) {
+            this.socket.on('message', function (msg)
+            {
                 switch (msg.type) {
                     case "PLAYERS_UPDATED":
                         console.log(msg.content)
@@ -82,7 +88,7 @@ class InGameScreen extends Component {
                         break
                     case "GAME_START":
                         console.log(msg.content)
-                        
+
                         // msg.content.cards.forEach(card => {
                         //     const newCard = new WhiteCard(card.response)
                         //     setWhiteCards(prev_whiteCards => prev_whiteCards.push(newCard))
@@ -90,11 +96,12 @@ class InGameScreen extends Component {
                         // setGameOver(prev_gameOver => false)
                         this.setState(prev_state => ({
                             //gameOn : true,
-                            whiteCards : msg.content.cards,
+                            whiteCards: msg.content.cards,
                         }))
                         console.log(this.state.whiteCards) // Expect array of 5 objects.
                         break
                     case "NEW_ROUND":
+                        console.log(msg)
                         console.log(msg.content)
                         // setIsJudge(prev_is_judge => msg.content.judge_id == props.current_player.id)
                         break
@@ -102,23 +109,28 @@ class InGameScreen extends Component {
                         console.log(msg.content)
                         // TODO: Show popups
                         break
+                    case "ROUND_TIMEOUT":
+                        console.log(msg.content.played_cards)
+                        break
                 }
             }.bind(this))
         })
     }
 
-    componentWillUnmount() {
+    componentWillUnmount()
+    {
         this.socket.close()
         clearInterval(this.state.timer)
     }
 
-    render() {
+    render()
+    {
         return (
             <>
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
                     <NavBar points={this.props.current_player.points} players={this.state.players} />
-                    <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket}/>
+                    <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket} />
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>
             </>
