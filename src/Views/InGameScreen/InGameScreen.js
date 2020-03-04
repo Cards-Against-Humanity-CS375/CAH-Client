@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import socketIOClient from "socket.io-client";
 import './InGameScreen.css'
 import Container from 'react-bootstrap/Container';
@@ -117,7 +118,7 @@ class InGameScreen extends Component {
             <>
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
-                    <NavBar points={this.props.current_player.points} players={this.state.players} />
+                    <NavBar points={this.props.route.current_player.points} players={this.state.players} />
                     <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket}/>
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>
