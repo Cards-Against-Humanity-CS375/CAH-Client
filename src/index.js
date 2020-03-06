@@ -16,15 +16,15 @@ function Screens()
   return (
     <Switch>
       <Route exact path="/" component={WelcomeScreen} />
-      <Route exact path="/ingame" component={InGameScreen} current_player={newPlayer} />
+      <Route exact path="/ingame" component={() => <InGameScreen current_player={newPlayer} />} current_player={newPlayer} />
       <Route path="*" component={() => "404 NOT FOUND"} />
     </Switch>
   )
 }
 
 const rootElement = document.getElementById("root");
-// ReactDOM.render(<BrowserRouter><Screens /></BrowserRouter>, rootElement);
-ReactDOM.render(<InGameScreen current_player={newPlayer} />, rootElement);
+ReactDOM.render(<BrowserRouter><Screens /></BrowserRouter>, rootElement);
+// ReactDOM.render(<InGameScreen current_player={newPlayer} />, rootElement);
 
 // ReactDOM.render(<WelcomeScreen current_player={newPlayer} />, document.getElementById('root'));
 
