@@ -23,7 +23,7 @@ const ShowPrompt = (props) => {
                 <Card className="box-shadow h-md-250" border="dark" bg="dark" text="white" style={{ height: '28rem' }}>
                     <Card.Body className="d-flex flex-column align-items-start">
                         <Card.Text>
-                            {props.blackCard}
+                            {props.blackCard.prompt}
                         </Card.Text>
                     </Card.Body>
                     <Card.Footer className="text-muted" >

@@ -20,11 +20,12 @@ class InGameScreen extends Component
     constructor(props)
     {
         super(props)
+        console.log(this.props.location.state.current_player)
         this.state = {
-            current_player: props.current_player,
+            current_player: this.props.location.state.current_player,
             blackCard: new BlackCard(""),
             whiteCards: [],
-            players: [props.current_player],
+            players: [this.props.location.state.current_player],
             timer: undefined,
             timeout: 0,
             logs: ["A successful message!"],
@@ -65,7 +66,7 @@ class InGameScreen extends Component
             // * Telling the server that you just joined the name
             this.socket.emit('message', {
                 "type": "NEW_CONNECTION",
-                "content": this.props.current_player.name
+                "content": this.state.current_player.name
             })
 
             this.socket.on('message', function (msg)
@@ -106,6 +107,11 @@ class InGameScreen extends Component
                     case "NEW_ROUND":
                         console.log(msg)
                         console.log(msg.content)
+                        this.setState(
+                            {
+                                blackCard: msg.content.blackCard,
+                            }
+                        )
                         // setIsJudge(prev_is_judge => msg.content.judge_id == props.current_player.id)
                         break
                     case "GAME_OVER":
@@ -132,7 +138,7 @@ class InGameScreen extends Component
             <>
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
-                    <NavBar points={this.props.current_player.points} players={this.state.players} />
+                    <NavBar points={this.state.current_player.points} players={this.state.players} />
                     <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>

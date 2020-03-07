@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import {Router, route} from "react-router";
+import { Router, route } from "react-router";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Link, withRouter } from "react-router-dom";
+import Player from '../../Models/Player';
 import { Grid, TextField, Button, Box, makeStyles, Container } from '@material-ui/core';
 import io from 'socket.io-client';
 
@@ -11,46 +12,45 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-class Welcome extends Component
-{
+class Welcome extends Component {
 
-    constructor(props)
-    {
+    constructor(props) {
         super(props)
         this.state = {
             name: '',
         }
     }
 
-    onChange = (event) =>
-    {
+    onChange = (event) => {
         this.setState({
             name: event.target.value,
         })
     }
 
-    onSubmit = (props) =>
-    {
-        var name = this.state.name;
+    onSubmit = () => {
+        let name = this.state.name;
         if (name == '') {
             name = 'I forgot to put a name.';
         };
-            // <switch>
-            //     <Route exact path="/ingame" component={InGameScreen} />
-            // </switch>
-            // props.history.push("/ingame");
-            this.props.history.push("/ingame");
-            // this.props.navigation.navigate('/ingame')
+        // <switch>
+        //     <Route exact path="/ingame" component={InGameScreen} />
+        // </switch>
+        // props.history.push("/ingame");
+        // TODO: Figure out the id. Does it have a purpose, or do we just use socket.id from InGame Screen as the identifier?
+        this.props.history.push({
+            pathname: '/ingame',
+            state: { current_player: new Player("123",name)}
+        });
+        // this.props.navigation.navigate('/ingame')
         // this.props.socket.emit('message', {
         //     type: "NEW_USER",
         //     content: name
         // });
-            
+
 
     }
 
-    render()
-    {
+    render() {
         // const classes = useStyles();
         return (
             <Box my="auto"><Grid container direction="column" alignItems="center"
@@ -64,4 +64,4 @@ class Welcome extends Component
     }
 }
 
-export default Welcome;
+export default withRouter(Welcome);

@@ -16,7 +16,7 @@ function Screens()
   return (
     <Switch>
       <Route exact path="/" component={WelcomeScreen} />
-      <Route exact path="/ingame" component={() => <InGameScreen current_player={newPlayer} />} current_player={newPlayer} />
+      <Route exact path="/ingame" render={props => <InGameScreen {...props} />}/>
       <Route path="*" component={() => "404 NOT FOUND"} />
     </Switch>
   )
