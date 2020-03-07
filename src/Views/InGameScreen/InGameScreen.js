@@ -38,7 +38,9 @@ class InGameScreen extends Component
         }
 
     }
-
+    checkIfJudge(passedID){ // Pass the msg.content.newJudgeID
+        return (passedID === this.socket.id ? true : false)
+    }
     componentDidMount()
     {
         this.setState({
@@ -105,10 +107,10 @@ class InGameScreen extends Component
                         console.log(this.state.whiteCards) // Expect array of 5 objects.
                         break
                     case "NEW_ROUND":
-                        console.log(msg)
-                        console.log(msg.content)
+                        console.log("The new judge is:",msg.content.newJudgeID,",the current socket ID is:",this.socket.id)
                         this.setState(
-                            {
+                            {   
+                                isJudgeTurn : this.checkIfJudge(msg.content.newJudgeID),
                                 blackCard: msg.content.blackCard,
                             }
                         )
@@ -139,7 +141,7 @@ class InGameScreen extends Component
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
                     <NavBar points={this.state.current_player.points} players={this.state.players} />
-                    <Main gameOn={this.state.gameOn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
+                    <Main gameOn={this.state.gameOn} isJudgeTurn={this.state.isJudgeTurn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>
             </>
