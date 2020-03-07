@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import { Router, route } from "react-router";
-import ReactDOM from "react-dom";
-import { withRouter } from "react-router-dom";
 import Player from '../../Models/Player';
-import { Grid, TextField, Button, Box, makeStyles, Container } from '@material-ui/core';
+import { Grid, TextField, Button, Box, makeStyles} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     textWelcome: {
@@ -28,7 +25,7 @@ class Welcome extends Component {
 
     onSubmit = () => {
         let name = this.state.name;
-        if (name == '') {
+        if (name === '') {
             name = 'I forgot to put a name.';
         };
         // TODO: Figure out the id. Does it have a purpose, or do we just use socket.id from InGame Screen as the identifier?

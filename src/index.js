@@ -6,10 +6,6 @@ import InGameScreen from './Views/InGameScreen/InGameScreen';
 import WelcomeScreen from './Views/WelcomeScreen/WelcomeScreen';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Player from './Models/Player'
-import Welcome from './Views/WelcomeScreen/WelcomeScreen';
-
-const newPlayer = new Player("123", "Quang Luong")//will be created using welcome screen
 
 function Screens()
 {

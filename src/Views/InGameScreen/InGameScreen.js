@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 import socketIOClient from "socket.io-client";
 import './InGameScreen.css'
 import Container from 'react-bootstrap/Container';
@@ -92,11 +91,6 @@ class InGameScreen extends Component
                         break
                     case "GAME_START":
                         console.log(msg.content)
-
-                        // msg.content.cards.forEach(card => {
-                        //     const newCard = new WhiteCard(card.response)
-                        //     setWhiteCards(prev_whiteCards => prev_whiteCards.push(newCard))
-                        // })
                         // setGameOver(prev_gameOver => false)
                         const cards = msg.content.cards.map((cardObj => new WhiteCard(cardObj.response)))
                         console.log(cards)
@@ -114,7 +108,6 @@ class InGameScreen extends Component
                                 blackCard: msg.content.blackCard,
                             }
                         )
-                        // setIsJudge(prev_is_judge => msg.content.judge_id == props.current_player.id)
                         break
                     case "GAME_OVER":
                         console.log(msg.content)
