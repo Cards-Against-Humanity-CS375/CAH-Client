@@ -134,6 +134,7 @@ class InGameScreen extends Component
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
                     <NavBar points={this.state.current_player.points} players={this.state.players} />
+                    {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     <Main gameOn={this.state.gameOn} isJudgeTurn={this.state.isJudgeTurn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>
