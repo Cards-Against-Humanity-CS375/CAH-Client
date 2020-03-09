@@ -40,22 +40,22 @@ class InGameScreen extends Component
     checkIfJudge(passedID){ // Pass the msg.content.newJudgeID
         return (passedID === this.socket.id ? true : false)
     }
-    componentDidMount()
-    {
+    setProgressTimer(){
         this.setState({
-            timeout: 60,
-            time_passed: 1
+            timeout: 45000,
+            time_passed: 0,
         })
-
         this.state.timer = setInterval(() =>
         {
             this.setState((prev_state) => ({
-                time_passed: prev_state.time_passed + 1,
+                time_passed: prev_state.time_passed + 1000,
                 progress: prev_state.time_passed / prev_state.timeout * 100
             }))
         }, 1000)
-
-
+    }
+    componentDidMount()
+    {
+        
         this.socket = socketIOClient(this.state.endpoint)
 
         this.socket.on('connect', () =>
@@ -108,6 +108,7 @@ class InGameScreen extends Component
                                 blackCard: msg.content.blackCard,
                             }
                         )
+                        this.setProgressTimer()
                         break
                     case "GAME_OVER":
                         console.log(msg.content)
