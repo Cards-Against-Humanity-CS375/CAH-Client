@@ -1,20 +1,21 @@
-import React, { Component } from "react"
 
-import Carousel from 'react-bootstrap/Carousel';
-import Card from 'react-bootstrap/Card';
-import Image from 'react-bootstrap/Image';
-import Button from 'react-bootstrap/Button';
-import LoadingMessage from './Loading';
-class CardDeck extends Component {
-    constructor(props) {
+
+
+class JudgeDeck extends Component {
+    constructor(props){
         super(props)
         this.state = {
-            cardChosen: this.props.cardChosen,
-            whiteCards: this.props.whiteCards,
+            isJudgeTurn: this.props.isJudgeTurn,
+            playedCards: this.props.whiteCards,
         }
     }
-    // TODO: Implment choose card BUT FOR JUDGE
-    render() {
+
+    handleSubmit = (e) => {
+        console.log("Hi")
+    }
+
+    render(){
+        // TODO: Implement onClick function to emit "CARD_CHOSEN_JUDGE"
         let carouselItems = this.state.whiteCards.map((whiteCard) =>
             <Carousel.Item>
                 <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem' }}>
@@ -30,26 +31,20 @@ class CardDeck extends Component {
                             Cards Against Humanity
                         </div>
                             <div className="col-4 pt-1 d-flex justify-content-end">
-                                <Button variant="outline-primary">Choose</Button>
+                                <Button variant="outline-primary" onClick={this.handleSubmit}>Choose</Button>
                             </div>
                         </div>
                     </Card.Footer>
                 </Card>
             </Carousel.Item>
         )
-        if (this.state.cardChosen) {
-            return (
-                <LoadingMessage message="Waiting for other players to pick..." />
-            )
-        } else {
-            return (
-                <>
-                <div>Your cards:</div>
-                <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
-                </>
-            )
-        }
+        return (
+            <>
+            <div><h3>Here are the cards everyone played!</h3></div>
+            <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
+            </>
+        )
     }
 }
 
-export default CardDeck
+export default JudgeDeck

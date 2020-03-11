@@ -33,7 +33,10 @@ class InGameScreen extends Component
             isJudgeTurn: false,
             progress: 0,
             time_passed: 0,
-            first_player: false
+            first_player: false,
+            cardChosen: false,
+            isJudgePicking: false,
+            playedCards: [],
         }
 
     }
@@ -115,7 +118,14 @@ class InGameScreen extends Component
                         // TODO: Show popups
                         break
                     case "ROUND_TIMEOUT":
-                        console.log(msg.content.played_cards)
+                        console.log(msg.content.playedCards)
+                        this.setState(
+                            {
+                                isJudgePicking : msg.content.isJudgePicking,
+                                playedCards: msg.content.playedCards,
+                            }
+                        )
+                        this.setProgressTimer()
                         break
                 }
             }.bind(this))
@@ -136,7 +146,8 @@ class InGameScreen extends Component
                 <Container>
                     <NavBar points={this.state.current_player.points} players={this.state.players} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
-                    <Main gameOn={this.state.gameOn} isJudgeTurn={this.state.isJudgeTurn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
+                    {/* TODO: Implement judge pick card on client side */}
+                    <Main gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.playedCards} isJudgePicking={this.state.isJudgePicking} isJudgeTurn={this.state.isJudgeTurn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     <MessageBox messages={this.state.logs} show={false} />
                 </Container>
             </>
