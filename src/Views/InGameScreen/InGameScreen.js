@@ -37,7 +37,8 @@ class InGameScreen extends Component
         }
 
     }
-    checkIfJudge(passedID){ // Pass the msg.content.newJudgeID
+    checkIfJudge(passedID)
+    { // Pass the msg.content.newJudgeID
         return (passedID === this.socket.id ? true : false)
     }
     componentDidMount()
@@ -95,16 +96,17 @@ class InGameScreen extends Component
                         const cards = msg.content.cards.map((cardObj => new WhiteCard(cardObj.response)))
                         console.log(cards)
                         this.setState(prev_state => ({
-                            gameOn: true,
                             whiteCards: cards,
+                            gameOn: true,
+
                         }))
                         console.log(this.state.whiteCards) // Expect array of 5 objects.
                         break
                     case "NEW_ROUND":
-                        console.log("The new judge is:",msg.content.newJudgeID,",the current socket ID is:",this.socket.id)
+                        console.log("The new judge is:", msg.content.newJudgeID, ",the current socket ID is:", this.socket.id)
                         this.setState(
-                            {   
-                                isJudgeTurn : this.checkIfJudge(msg.content.newJudgeID),
+                            {
+                                isJudgeTurn: this.checkIfJudge(msg.content.newJudgeID),
                                 blackCard: msg.content.blackCard,
                             }
                         )

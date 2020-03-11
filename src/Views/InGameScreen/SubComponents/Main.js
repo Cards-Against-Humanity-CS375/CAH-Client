@@ -3,8 +3,11 @@ import ShowPrompt from "./ShowPrompt"
 import CardDeck from "./CardDeck"
 import Button from 'react-bootstrap/Button';
 import LoadingMessage from "./Loading"
-class Main extends Component {
-    constructor(props) {
+// const { CardDeck } = require("./CardDeck")
+class Main extends Component
+{
+    constructor(props)
+    {
         super(props)
         this.state = {
         }
@@ -12,19 +15,22 @@ class Main extends Component {
         this.btnStartGame = this.btnStartGame.bind(this);
     }
 
-    btnStartGame() {
+    btnStartGame()
+    {
         this.props.socket.emit('message', {
             type: 'GAME_START',
             content: "Hey Mr. Server! Please start the game!"
         })
     }
 
-    render() { // TODO: Need to check 2 bool values : Is it the judge's turn, and is it time for the judge to pick yet. 2 states.
+    render()
+    { // TODO: Need to check 2 bool values : Is it the judge's turn, and is it time for the judge to pick yet. 2 states.
         if (this.props.gameOn) {
             return (
                 <div className="d-flex flex-column align-items-center">
                     <ShowPrompt blackCard={this.props.blackCard} />
-                    {this.props.isJudgeTurn ? <LoadingMessage message="You are the Judge! Wait for everyone to pick a card first..." /> : <CardDeck whiteCards={this.props.whiteCards} />}
+                    {this.props.isJudgeTurn ? <LoadingMessage message="You are the Judge! Wait for everyone to pick a card first..." /> :
+                        <CardDeck socket={this.props.socket} whiteCards={this.props.whiteCards} />}
                 </div>
             )
         }
