@@ -15,10 +15,8 @@ import BlackCard from "../../Models/BlackCard"
  * The main code for InGameScreen
  * @param {} props : contains information for current_player, score
  */
-class InGameScreen extends Component
-{
-    constructor(props)
-    {
+class InGameScreen extends Component {
+    constructor(props) {
         super(props)
         this.state = {
             current_player: props.current_player,
@@ -38,26 +36,25 @@ class InGameScreen extends Component
 
     }
 
-    componentDidMount()
-    {
+    componentDidMount() {
         this.setState({
             timeout: 60,
             time_passed: 1
         })
 
-        this.state.timer = setInterval(() =>
-        {
-            this.setState((prev_state) => ({
-                time_passed: prev_state.time_passed + 1,
-                progress: prev_state.time_passed / prev_state.timeout * 100
-            }))
-        }, 1000)
+        this.setState((prev_state) => ({
+            timer: setInterval(() => {
+                this.setState((prev_state) => ({
+                    time_passed: prev_state.time_passed + 1,
+                    progress: prev_state.time_passed / prev_state.timeout * 100
+                }))
+            }, 1000)
+        }))
 
 
         this.socket = socketIOClient(this.state.endpoint)
 
-        this.socket.on('connect', () =>
-        {
+        this.socket.on('connect', () => {
             this.setState(prev_state => ({
                 current_player: new Player(this.socket.io, prev_state.current_player.name)
             }))
@@ -68,8 +65,7 @@ class InGameScreen extends Component
                 "content": this.props.current_player.name
             })
 
-            this.socket.on('message', function (msg)
-            {
+            this.socket.on('message', function (msg) {
                 switch (msg.type) {
                     case "PLAYERS_UPDATED":
                         console.log(msg.content)
@@ -115,19 +111,20 @@ class InGameScreen extends Component
                     case "ROUND_TIMEOUT":
                         console.log(msg.content.played_cards)
                         break
+                    default:
+                        console.log(msg.content.played_cards)
+                        break
                 }
             }.bind(this))
         })
     }
 
-    componentWillUnmount()
-    {
+    componentWillUnmount() {
         this.socket.close()
         clearInterval(this.state.timer)
     }
 
-    render()
-    {
+    render() {
         return (
             <>
                 <TimerProgressBar progress={this.state.progress} />
