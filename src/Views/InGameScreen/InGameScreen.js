@@ -47,13 +47,13 @@ class InGameScreen extends Component
             time_passed: 1
         })
 
-        this.state.timer = setInterval(() =>
-        {
-            this.setState((prev_state) => ({
-                time_passed: prev_state.time_passed + 1,
-                progress: prev_state.time_passed / prev_state.timeout * 100
-            }))
-        }, 1000)
+        // this.state.timer = setInterval(() =>
+        // {
+        //     this.setState((prev_state) => ({
+        //         time_passed: prev_state.time_passed + 1,
+        //         progress: prev_state.time_passed / prev_state.timeout * 100
+        //     }))
+        // }, 1000)
 
 
         this.socket = socketIOClient(this.state.endpoint)
@@ -83,7 +83,7 @@ class InGameScreen extends Component
                             players: result
                         })
                         break
-                    case "FRIST_PLAYER_RIGHT":
+                    case "FRIST_PLAYER_RIGHTS":
                         console.log(msg.content)
                         this.setState({
                             first_player: msg.content['first_player']
@@ -115,6 +115,8 @@ class InGameScreen extends Component
                         break
                     case "ROUND_TIMEOUT":
                         console.log(msg.content.played_cards)
+                        break
+                    default:
                         break
                 }
             }.bind(this))
