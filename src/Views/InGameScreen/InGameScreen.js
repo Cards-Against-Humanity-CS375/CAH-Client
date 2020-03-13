@@ -56,6 +56,15 @@ class InGameScreen extends Component
             }))
         }, 1000)
     }
+    resolveScoreUpdates(players){
+        this.state.players.forEach((player,index) => {
+            player.points = players[index].score;
+            if (this.state.current_player.name === player.name) {
+                this.state.current_player.points = players[index].score;
+            }
+        })
+    }
+
     componentDidMount()
     {
         
@@ -127,6 +136,9 @@ class InGameScreen extends Component
                         )
                         this.setProgressTimer()
                         break
+                    case "SCORE_UPDATED":
+                        this.resolveScoreUpdates(msg.content.players);
+                        break
                 }
             }.bind(this))
         })
@@ -144,7 +156,7 @@ class InGameScreen extends Component
             <>
                 <TimerProgressBar progress={this.state.progress} />
                 <Container>
-                    <NavBar points={this.state.current_player.points} players={this.state.players} />
+                    <NavBar points={this.state.current_player.points} players={this.state.players} current_player={this.state.current_player} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     {/* TODO: Implement judge pick card on client side */}
                     <Main gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.playedCards} isJudgePicking={this.state.isJudgePicking} isJudgeTurn={this.state.isJudgeTurn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />

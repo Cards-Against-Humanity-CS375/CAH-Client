@@ -1,5 +1,8 @@
-
-
+import React, { Component } from "react";
+import Carousel from 'react-bootstrap/Carousel';
+import Card from 'react-bootstrap/Card';
+import Image from 'react-bootstrap/Image';
+import Button from 'react-bootstrap/Button';
 
 class JudgeDeck extends Component {
     constructor(props){
