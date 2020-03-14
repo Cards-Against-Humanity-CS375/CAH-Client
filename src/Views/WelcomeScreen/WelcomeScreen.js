@@ -3,7 +3,7 @@ import Player from '../../Models/Player';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-// import './WelcomeScreen.css'
+import './WelcomeScreen.css'
 import logo from './logo.png'
 // import { Grid, TextField, Button, Box } from '@material-ui/core';
 
@@ -15,6 +15,8 @@ class Welcome extends Component {
             player_name: '',
             validated: false
         }
+
+        this.textInput = React.createRef();
     }
 
     onChange = (event) => {
@@ -28,6 +30,7 @@ class Welcome extends Component {
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
+            this.textInput.current.focus();
         }
         else {
             this.props.history.push({ // We pass the state, and can access using this.props.location.state. LOCATION is important!
@@ -60,6 +63,21 @@ class Welcome extends Component {
         // }
     }
 
+    componentDidMount() {
+        document.body.classList.add("welcome-screen-body")
+        document.body.style.height = "100%"
+        document.querySelector('html').style.height = "100%"
+
+        this.textInput.current.focus();
+    }
+
+    componentWillUnmount() {
+        document.body.classList.remove("welcome-screen-body")
+        // document.body.classList.add("reset-this")
+        document.body.style.height = ""
+        document.querySelector('html').style.height = ""
+    }
+
     render() {
         return (
             <div className="text-center">
@@ -67,7 +85,7 @@ class Welcome extends Component {
                     <img className="mb-4" src={logo} alt="" width="72" height="72" />
                     <h1 className="h3 mb-5 font-weight-normal">Cards Against Humanity</h1>
                     <label htmlFor="inputName" className="sr-only">Full name</label>
-                    <input type="fullName" id="inputName" className="form-control" placeholder="Your name here..." required autoFocus onChange={this.onChange}></input>
+                    <input ref={this.textInput} type="fullName" id="inputName" className="form-control" placeholder="Your name here..." required autoFocus onChange={this.onChange}></input>
                     <Form.Control.Feedback type="invalid" className="invalid-feedback">
                         Your name is required.
                     </Form.Control.Feedback>
