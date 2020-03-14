@@ -9,22 +9,28 @@ class JudgeDeck extends Component {
         super(props)
         this.state = {
             isJudgeTurn: this.props.isJudgeTurn,
-            playedCards: this.props.whiteCards,
+            playedCards: this.props.playedCards,
+            socket: this.props.socket,
         }
     }
 
-    handleSubmit = (e) => {
-        console.log("Hi")
+    handleSubmit = (cardText) => {
+        socket.emit('message',{
+            "type": "JUDGE_CHOSEN_CARD",
+            "content": {
+                cardText: cardText,
+            }
+        })
     }
 
     render(){
         // TODO: Implement onClick function to emit "CARD_CHOSEN_JUDGE"
-        let carouselItems = this.state.whiteCards.map((whiteCard) =>
+        let carouselItems = this.state.playedCards.map((whiteCard) => // whiteCard is a string.
             <Carousel.Item>
                 <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem' }}>
                     <Card.Body className="d-flex flex-column align-items-start">
                         <Card.Text>
-                            {whiteCard.response}
+                            {whiteCard}
                         </Card.Text>
                     </Card.Body>
                     <Card.Footer className="text-muted">
@@ -34,7 +40,7 @@ class JudgeDeck extends Component {
                             Cards Against Humanity
                         </div>
                             <div className="col-4 pt-1 d-flex justify-content-end">
-                                <Button variant="outline-primary" onClick={this.handleSubmit}>Choose</Button>
+                                <Button variant="outline-primary" onClick={this.handleSubmit(whiteCard)}>Choose</Button>
                             </div>
                         </div>
                     </Card.Footer>
