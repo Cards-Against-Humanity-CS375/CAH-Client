@@ -116,7 +116,7 @@ class InGameScreen extends Component
                         // TODO: Show popups
                         break
                     case "ROUND_TIMEOUT":
-                        console.log(msg.content.played_cards)
+                        console.log("Round Over! Submissions:", msg.content.played_cards)
                         break
                 }
             }.bind(this))

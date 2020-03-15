@@ -9,14 +9,10 @@ class CardDeck extends Component
     constructor(props)
     {
         super(props)
-        // this.state = {
-        //     socket: this.props.socket,
-        //     whiteCards: this.props.whiteCards,
-        // }
     }
     sendCardChosenMessage(chosenCard)
     {
-        console.log("Emitting card chosen message with chosen card:", chosenCard)
+        console.log("sending message: ", chosenCard)
         this.props.socket.emit('message', {
             "type": "CARD_CHOSEN",
             "content": {
@@ -26,8 +22,8 @@ class CardDeck extends Component
         })
     }
 
-    carouselItems = this.props.whiteCards.map((whiteCard) =>
-        <Carousel.Item>
+    carouselItems = this.props.whiteCards.map((whiteCard, index) =>
+        <Carousel.Item key={whiteCard.response}>
             <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem' }}>
                 <Card.Body className="d-flex flex-column align-items-start">
                     <Card.Text>
@@ -41,17 +37,21 @@ class CardDeck extends Component
                             Cards Against Humanity
                         </div>
                         <div className="col-4 pt-1 d-flex justify-content-end">
-                            <Button variant="outline-primary" onClick={
-                                // sendCardChosenMessage(whiteCard)
-                                () => { this.sendCardChosenMessage(whiteCard) }
-                            }>Choose</Button>
+                            <Button variant="outline-primary"
+                                onClick={
+                                    // sendCardChosenMessage(whiteCard)
+                                    () => { this.sendCardChosenMessage(whiteCard) }
+                                }>Choose</Button>
                         </div>
                     </div>
                 </Card.Footer>
             </Card>
         </Carousel.Item>
     )
-    onSubmit = () => { }
+    onSubmit = () =>
+    {
+        console.log("onsubmit called")
+    }
     render()
     {
         return (<Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>
