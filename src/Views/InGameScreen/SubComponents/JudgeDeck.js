@@ -5,7 +5,7 @@ import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 
 class JudgeDeck extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
             isJudgeTurn: this.props.isJudgeTurn,
@@ -15,15 +15,19 @@ class JudgeDeck extends Component {
     }
 
     handleSubmit = (cardText) => {
-        socket.emit('message',{
-            "type": "JUDGE_CHOSEN_CARD",
-            "content": {
-                cardText: cardText,
-            }
-        })
+        if (this.state.isJudgeTurn) {
+            socket.emit('message', {
+                "type": "JUDGE_CHOSEN_CARD",
+                "content": {
+                    cardText: cardText,
+                }
+            });
+        } else {
+            console.log("You are not the judge!")
+        } 
     }
 
-    render(){
+    render() {
         // TODO: Implement onClick function to emit "CARD_CHOSEN_JUDGE"
         let carouselItems = this.state.playedCards.map((whiteCard) => // whiteCard is a string.
             <Carousel.Item>
@@ -49,8 +53,8 @@ class JudgeDeck extends Component {
         )
         return (
             <>
-            <div><h3>Here are the cards everyone played!</h3></div>
-            <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
+                <div><h3>Here are the cards everyone played!</h3></div>
+                <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
             </>
         )
     }
