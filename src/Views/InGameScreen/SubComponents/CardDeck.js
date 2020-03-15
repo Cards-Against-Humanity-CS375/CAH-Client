@@ -3,13 +3,14 @@ import Carousel from 'react-bootstrap/Carousel';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import Loading from './Loading'
 
 class CardDeck extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            is_card_chosen: false
+            chosen_card_text: ""
         }
     }
 
@@ -24,8 +25,10 @@ class CardDeck extends Component {
         })
 
         this.setState({
-            is_card_chosen: true
+            chosen_card_text: chosenCard.response
         })
+
+        this.props.provokeParentChangeIsCardChosenState()
     }
 
     carouselItems = this.props.whiteCards.map((whiteCard, index) =>
@@ -52,15 +55,17 @@ class CardDeck extends Component {
     )
 
     render() {
-        if (!this.state.is_card_chosen) {
+        if (!this.props.is_card_chosen) {
             return (
                 <>
-                    <div>Your cards:</div>
+                    <div>
+                        <Alert variant="primary"> Your cards:</Alert>
+                    </div>
                     <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>
                         {this.carouselItems}
                     </Carousel>
                 </>
-            )
+            ) 
         }
         else {
             if (this.props.isJudgePicking) {
@@ -68,7 +73,7 @@ class CardDeck extends Component {
             }
             else {
                 return (
-                    <Loading message="Waiting for others to choose card..." />
+                    <Loading message={`You chose: ${this.state.chosen_card_text}. Waiting for others to choose card...`} />
                 )
             }
         }

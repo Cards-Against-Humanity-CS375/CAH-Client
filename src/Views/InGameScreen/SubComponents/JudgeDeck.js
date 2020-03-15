@@ -3,10 +3,17 @@ import Carousel from 'react-bootstrap/Carousel';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
+import Modal from 'react-bootstrap/Modal';
 
 class JudgeDeck extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            is_decided: false
+        }
+
+        this.handleClose = this.handleClose.bind(this)
     }
 
     handleSubmit = (cardText) => {
@@ -19,12 +26,21 @@ class JudgeDeck extends Component {
             });
         } else {
             console.log("You are not the judge!")
-        } 
+        }
+        this.setState({
+            is_decided: true
+        })
+    }
+
+    handleClose = () => {
+        this.setState({
+            is_decided: false
+        })
     }
 
     render() {
         // TODO: Implement onClick function to emit "CARD_CHOSEN_JUDGE"
-        console.log(this.props.playedCards)
+        // console.log(this.props.playedCards)
         let playedCards = this.props.playedCards.filter(whiteCard => whiteCard.response)
         let carouselItems = playedCards.map((whiteCard, index) => // whiteCard is a string.
             <Carousel.Item key={index}>
@@ -45,13 +61,33 @@ class JudgeDeck extends Component {
                             </div>
                         </div>
                     </Card.Footer>
-                </Card> 
+                </Card>
             </Carousel.Item>
         )
         return (
             <>
-                {this.props.isJudge ? <div>Here are the cards everyone played! Let's decide! </div> : <div>Here are the cards everyone played! Waiting for judgement... </div>}
+                {this.props.isJudge
+                    ?
+                    <Alert variant="warning">
+                        <div>Here are the cards everyone played! Let's decide! </div>
+                    </Alert>
+                    :
+                    <Alert variant="secondary">
+                        <div>Here are the cards everyone played! Waiting for judgement... </div>
+                    </Alert>
+                }
                 <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
+                <Modal show={this.state.is_decided} onHide={this.handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>You're amazing!</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Decision sending to other players... You're rock!!!</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </>
         )
     }

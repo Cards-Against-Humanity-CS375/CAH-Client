@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import Spinner from "react-bootstrap/Spinner"
+import Alert from "react-bootstrap/Alert"
 
 class Loading extends Component {
     constructor(props) {
@@ -10,7 +11,11 @@ class Loading extends Component {
         return (
             <div className="d-flex flex-column my-1 align-items-center justify-content-center flex-fill">
                 <Spinner animation="border" />
-                <div className="mt-3" >{this.props.message}</div>
+                <div className="mt-3" >
+                    <Alert variant="info">
+                        {this.props.message}
+                    </Alert>
+                </div>
             </div>
         )
     }

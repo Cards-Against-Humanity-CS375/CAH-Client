@@ -5,7 +5,7 @@ import TimerProgressBar from "./SubComponents/ProgressBar"
 import NavBar from "./SubComponents/NavBar"
 import MessageBox from "./SubComponents/MessageBox"
 import Main from "./SubComponents/Main"
-import ChooseWinCard from "./SubComponents/ChooseWinCard"
+import AnnounceWinner from "./SubComponents/AnnounceWinner"
 import Player from "../../Models/Player"
 import WhiteCard from "../../Models/WhiteCard"
 import BlackCard from "../../Models/BlackCard"
@@ -41,16 +41,21 @@ class InGameScreen extends Component {
             is_first_player: false,
             show_message: false,
             show_choosing_winning_card: false,
-            submissions: []
+            submissions: [],
+            should_announce_winner: false,
+            didWon: false,
+            is_card_chosen: false
         }
 
         this.dismissMessage = this.dismissMessage.bind(this)
+        this.dismissCloseWinMessage = this.dismissCloseWinMessage.bind(this)
+        this.changeCardChosenState = this.changeCardChosenState.bind(this)
     }
 
-    resolveScoreUpdates(players) {
+    resolveScoreUpdates(playerIdAndScores) {
         const clone_online_players = [...this.state.online_players]
         const update_scores = clone_online_players.map((player, index) => {
-            player.points = players[index].score
+            player.points = playerIdAndScores[index].player_score
             return player
         })
         this.setState({
@@ -61,7 +66,7 @@ class InGameScreen extends Component {
         //     if (this.state.current_player.name === player.name) {
         //         this.state.current_player.points = players[index].score;
         //     }
-        // })
+        // }) 
     }
 
     UNSAFE_componentWillMount() {
@@ -137,8 +142,12 @@ class InGameScreen extends Component {
                         }, 1000),
                         timeout: msg.content.timeout,
                         time_passed: 0,
-                        isJudgePicking: msg.content.isJudgePicking,
-                        progressBarPercentage: 0
+                        isJudgePicking: false,
+                        progressBarPercentage: 0,
+                        didWon: false,
+                        submissions: [],
+                        should_announce_winner: false,
+                        is_card_chosen: false
                     })
                     break
                 case "GAME_OVER":
@@ -164,7 +173,28 @@ class InGameScreen extends Component {
                     })
                     break
                 case "SCORE_UPDATED":
-                    this.resolveScoreUpdates(msg.content.players);
+                    this.resolveScoreUpdates(msg.content.playerIdAndScores);
+                    clearInterval(this.state.timer)
+                    let won = false
+                    msg.content.playerIdAndScores.forEach((player) => {
+                        if (player.player_id === socket.id) {
+                            if (player.player_won) {
+                                won = true
+                            }
+                        }
+                    })
+                    this.setState({
+                        should_announce_winner: true,
+                        didWon: won,
+                        timer: setInterval(() => {
+                            this.setState((prev_state) => ({
+                                time_passed: prev_state.time_passed + 1000,
+                                progressBarPercentage: prev_state.time_passed / prev_state.timeout * 100
+                            }))
+                        }, 1000),
+                        timeout: msg.content.timeout,
+                        time_passed: 0,
+                    })
                     break
                 default:
                     break
@@ -188,6 +218,18 @@ class InGameScreen extends Component {
         })
     }
 
+    dismissCloseWinMessage() {
+        this.setState({
+            should_announce_winner: false
+        })
+    }
+
+    changeCardChosenState() {
+        this.setState({
+            is_card_chosen: true
+        })
+    }
+
     render() {
         return (
             <>
@@ -196,10 +238,10 @@ class InGameScreen extends Component {
                     <NavBar points={this.state.current_player.points} online_players={this.state.online_players} current_player={this.state.current_player} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     {/* TODO: Implement judge pick card on client side */}
-                    <Main gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.submissions} isJudgePicking={this.state.isJudgePicking} isJudge={this.state.isJudge} isFirstPlayer={this.state.is_first_player} socket={socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
+                    <Main provokeChangeIsCardChosenState={this.changeCardChosenState} is_card_chosen={this.state.is_card_chosen} gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.submissions} isJudgePicking={this.state.isJudgePicking} isJudge={this.state.isJudge} isFirstPlayer={this.state.is_first_player} socket={socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     <MessageBox message={this.state.message} show={this.state.show_message} provokeParentDismiss={this.dismissMessage} />
-
+                    {!this.state.isJudge ? <AnnounceWinner show={this.state.should_announce_winner} won={this.state.didWon} provokeParentCloseWinMessage={this.dismissCloseWinMessage} /> : <></>}
                 </Container>
             </>
         )
