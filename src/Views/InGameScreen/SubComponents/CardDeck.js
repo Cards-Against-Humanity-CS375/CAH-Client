@@ -6,8 +6,8 @@ import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 
 const CardDeck = (props) => {
-    const carouselItems = props.whiteCards.map((whiteCard) =>
-        <Carousel.Item>
+    const carouselItems = props.whiteCards.map((whiteCard, index) =>
+        <Carousel.Item key={index}>
             <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem' }}>
                 <Card.Body className="d-flex flex-column align-items-start">
                     <Card.Text>

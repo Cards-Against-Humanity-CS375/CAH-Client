@@ -5,8 +5,8 @@ import Image from 'react-bootstrap/Image';
 import Badge from 'react-bootstrap/Badge';
 
 const NavBar = (props) => {
-    const playerNameItems = props.players.map((player) =>
-        <a className="p-2 text-muted" href="#">{player.name}</a>
+    const playerNameItems = props.online_players.map((player, index) =>
+        <a className="p-2 text-muted" href="#" key={index}>{player.name}</a>
     )
 
     return (
@@ -25,7 +25,7 @@ const NavBar = (props) => {
                     <div className="col-4 pt-1 d-flex justify-content-end align-items-center">
                         <Button variant="outline-secondary">
                             <Image src="./assets/pug.svg" fluid />
-                            <Badge variant="primary" className="mx-1">{props.players.length}</Badge>
+                            <Badge variant="primary" className="mx-1">{props.online_players.length}</Badge>
                         </Button>
                     </div>
                 </div>

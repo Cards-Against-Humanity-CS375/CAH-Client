@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import Player from '../../Models/Player';
 import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
 import './WelcomeScreen.css'
 import logo from './logo.png'
-// import { Grid, TextField, Button, Box } from '@material-ui/core';
 
 class Welcome extends Component {
 
@@ -35,32 +32,13 @@ class Welcome extends Component {
         else {
             this.props.history.push({ // We pass the state, and can access using this.props.location.state. LOCATION is important!
                 pathname: '/ingame',
-                state: { current_player: new Player("123", this.state.player_name) }
+                state: { current_player_name: this.state.player_name }
             });
         }
 
         this.setState((prev_state) => ({
             validated: true
         }))
-
-        // if (!this.state.player_name) {
-        //     event.preventDefault()
-        //     this.setState((prev_state) => ({
-        //         inputError: true
-        //     }))
-        // }
-        // else {
-        //     this.setState((prev_state) => ({
-        //         inputError: false
-        //     }))
-
-        //     // TODO: Figure out the id. Does it have a purpose, or do we just use socket.id from InGame Screen as the identifier?
-        //     // TODO: Yeah it doesn't matter lol
-        //     this.props.history.push({ // We pass the state, and can access using this.props.location.state. LOCATION is important!
-        //         pathname: '/ingame',
-        //         state: { current_player: new Player("123", this.state.player_name) }
-        //     });
-        // }
     }
 
     componentDidMount() {

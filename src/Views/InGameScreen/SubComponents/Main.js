@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import ShowPrompt from "./ShowPrompt"
 import CardDeck from "./CardDeck"
 import Button from 'react-bootstrap/Button';
-import LoadingMessage from "./Loading"
+import Loading from "./Loading"
 class Main extends Component {
     constructor(props) {
         super(props)
@@ -24,7 +24,7 @@ class Main extends Component {
             return (
                 <div className="d-flex flex-column align-items-center">
                     <ShowPrompt blackCard={this.props.blackCard} />
-                    {this.props.isJudgeTurn ? <LoadingMessage message="You are the Judge! Wait for everyone to pick a card first..." /> : <CardDeck whiteCards={this.props.whiteCards} />}
+                    {this.props.isJudge ? <Loading message="You are the Judge! Wait for everyone to pick a card first..." /> : <CardDeck whiteCards={this.props.whiteCards} />}
                 </div>
             )
         }
@@ -38,7 +38,7 @@ class Main extends Component {
             }
             else {
                 return (
-                    <LoadingMessage message="Waiting for host to start the game..." />
+                    <Loading message="Waiting for host to start the game..." />
                 )
             }
         }
