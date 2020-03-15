@@ -128,7 +128,7 @@ class InGameScreen extends Component {
                     clearInterval(this.state.timer)
                     this.setState({
                         show_choosing_winning_card: true,
-                        submission: msg.content.submissions.map(submission => new WhiteCard(submission.played_card)),
+                        submissions: msg.content.submissions.map(submission => new WhiteCard(submission.played_card)),
                         timer: setInterval(() => {
                             this.setState((prev_state) => ({
                                 time_passed: prev_state.time_passed + 1000,
@@ -168,9 +168,8 @@ class InGameScreen extends Component {
                 <Container>
                     <NavBar points={this.state.current_player.points} online_players={this.state.online_players} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
-                    <Main gameOn={this.state.gameOn} isJudge={this.state.isJudge} isFirstPlayer={this.state.is_first_player} socket={socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
+                    <Main chosenWhiteCards={this.state.submissions} gameOn={this.state.gameOn} isJudge={this.state.isJudge} isFirstPlayer={this.state.is_first_player} socket={socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} timeout={this.state.show_choosing_winning_card}/>
                     <MessageBox message={this.state.message} show={this.state.show_message} provokeParentDismiss={this.dismissMessage} />
-                    <ChooseWinCard chosenWhiteCards={this.state.submissions} show={this.state.show_choosing_winning_card} isJudge={this.state.isJudge} />
                 </Container>
             </>
         )
