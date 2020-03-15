@@ -1,63 +1,53 @@
 import React, { Component } from "react"
-import socketIOClient from "socket.io-client";
 import './InGameScreen.css'
 import Container from 'react-bootstrap/Container';
 import TimerProgressBar from "./SubComponents/ProgressBar"
 import NavBar from "./SubComponents/NavBar"
 import MessageBox from "./SubComponents/MessageBox"
 import Main from "./SubComponents/Main"
+import ChooseWinCard from "./SubComponents/ChooseWinCard"
 import Player from "../../Models/Player"
 import WhiteCard from "../../Models/WhiteCard"
 import BlackCard from "../../Models/BlackCard"
+
+import socket from '../../api/Socket'
 
 /**
  * The main code for InGameScreen
  * @param {} props : contains information for current_player, score
  */
-class InGameScreen extends Component
-{
-    constructor(props)
-    {
+class InGameScreen extends Component {
+    constructor(props) {
         super(props)
-        console.log(this.props.location.state.current_player)
+        // console.log(this.props.location.state.current_player)
         this.state = {
-            current_player: this.props.location.state.current_player,
+            current_player_name: this.props.location.state.current_player_name,
+            current_player_id: "",
+            current_player: new Player(undefined, this.props.location.state.current_player_name),
             blackCard: new BlackCard(""),
             whiteCards: [],
-            players: [this.props.location.state.current_player],
+            online_players: [],
             timer: undefined,
             timeout: 0,
-            logs: ["A successful message!"],
+            message: "",
             gameOn: false,
-            endpoint: 'http://localhost:3001',
-            isJudgeTurn: false,
-            progress: 0,
+            isJudge: false,
+            progressBarPercentage: 0,
             time_passed: 0,
-            first_player: false,
+            // first_player: false,
             cardChosen: false,
             isJudgePicking: false,
-            playedCards: [],
+            // playedCards: [],
+            is_first_player: false,
+            show_message: false,
+            show_choosing_winning_card: false,
+            submissions: []
         }
 
-    }
-    checkIfJudge(passedID){ // Pass the msg.content.newJudgeID
-        return (passedID === this.socket.id ? true : false)
-    }
-    setProgressTimer(){
-        this.setState({
-            timeout: 45000,
-            time_passed: 0,
-        })
-        this.state.timer = setInterval(() =>
-        {
-            this.setState((prev_state) => ({
-                time_passed: prev_state.time_passed + 1000,
-                progress: prev_state.time_passed / prev_state.timeout * 100
-            }))
-        }, 1000)
+        this.dismissMessage = this.dismissMessage.bind(this)
     }
     resolveScoreUpdates(players){
-        this.state.players.forEach((player,index) => {
+        this.state.online_players.forEach((player,index) => {
             player.points = players[index].score;
             if (this.state.current_player.name === player.name) {
                 this.state.current_player.points = players[index].score;
@@ -65,102 +55,142 @@ class InGameScreen extends Component
         })
     }
 
-    componentDidMount()
-    {
-        
-        this.socket = socketIOClient(this.state.endpoint)
+    UNSAFE_componentWillMount() {
+        if (socket) {
+            this.tellServerYouJoin()
+        }
+    }
 
-        this.socket.on('connect', () =>
-        {
-            this.setState(prev_state => ({
-                current_player: new Player(this.socket.io, prev_state.current_player.name)
-            }))
+    tellServerYouJoin() {
+        this.setState((prev_state) => ({
+            current_player_id: socket.id,
+            current_player: new Player(socket.id, prev_state.current_player_name)
+        }))
 
-            // * Telling the server that you just joined the name
-            this.socket.emit('message', {
-                "type": "NEW_CONNECTION",
-                "content": this.state.current_player.name
-            })
-
-            this.socket.on('message', function (msg)
-            {
-                switch (msg.type) {
-                    case "PLAYERS_UPDATED":
-                        console.log(msg.content)
-                        const players_on_server = msg.content.players
-
-                        const result = players_on_server.map(player_on_server => new Player(player_on_server.id, player_on_server.name))
-
-                        this.setState({
-                            players: result
-                        })
-                        break
-                    case "FRIST_PLAYER_RIGHT":
-                        console.log(msg.content)
-                        this.setState({
-                            first_player: msg.content['first_player']
-                        })
-                        break
-                    case "GAME_START":
-                        console.log(msg.content)
-                        // setGameOver(prev_gameOver => false)
-                        const cards = msg.content.cards.map((cardObj => new WhiteCard(cardObj.response)))
-                        console.log(cards)
-                        this.setState(prev_state => ({
-                            gameOn: true,
-                            whiteCards: cards,
-                        }))
-                        console.log(this.state.whiteCards) // Expect array of 5 objects.
-                        break
-                    case "NEW_ROUND":
-                        console.log("The new judge is:",msg.content.newJudgeID,",the current socket ID is:",this.socket.id)
-                        this.setState(
-                            {   
-                                isJudgeTurn : this.checkIfJudge(msg.content.newJudgeID),
-                                blackCard: msg.content.blackCard,
-                            }
-                        )
-                        this.setProgressTimer()
-                        break
-                    case "GAME_OVER":
-                        console.log(msg.content)
-                        // TODO: Show popups
-                        break
-                    case "ROUND_TIMEOUT":
-                        console.log(msg.content.playedCards)
-                        this.setState(
-                            {
-                                isJudgePicking : msg.content.isJudgePicking,
-                                playedCards: msg.content.playedCards,
-                            }
-                        )
-                        this.setProgressTimer()
-                        break
-                    case "SCORE_UPDATED":
-                        this.resolveScoreUpdates(msg.content.players);
-                        break
-                }
-            }.bind(this))
+        // * Telling the server that you just joined the name
+        socket.emit('message', {
+            "type": "NEW_CONNECTION",
+            "content": this.state.current_player.name
         })
     }
 
-    componentWillUnmount()
-    {
-        this.socket.close()
+    componentDidMount() {
+        socket.on('message', function (msg) {
+            switch (msg.type) {
+                case "PLAYERS_UPDATED":
+                    console.log(msg.content)
+                    const players_on_server = msg.content.players
+
+                    const result = players_on_server.map(player_on_server => new Player(player_on_server.id, player_on_server.name))
+
+                    this.setState({
+                        online_players: result
+                    })
+                    break
+                case "FIRST_PLAYER_RIGHTS":
+                    console.log(msg.content)
+                    this.setState({
+                        is_first_player: msg.content.first_player
+                    })
+                    break
+                case "MISSING_PLAYERS":
+                    console.log(msg.content)
+                    this.setState({
+                        message: msg.content,
+                        show_message: true
+                    })
+                    break
+                case "GAME_START":
+                    console.log(msg.content)
+                    // setGameOver(prev_gameOver => false)
+                    const cards = msg.content.cards.map((cardObj => new WhiteCard(cardObj.response)))
+                    console.log(cards)
+                    this.setState(() => ({
+                        gameOn: true,
+                        whiteCards: cards,
+                    }))
+                    console.log(this.state.whiteCards) // Expect array of 5 objects.
+                    break
+                case "NEW_ROUND":
+                    console.log("The new judge is:", msg.content.newJudgeID, ", the current socket ID is:", socket.id)
+                    clearInterval(this.state.timer)
+                    this.setState({
+                        isJudge: this.isMeJudge(msg.content.newJudgeID),
+                        blackCard: msg.content.blackCard,
+                        timer: setInterval(() => {
+                            // console.log(this.state.timeout)
+                            // console.log(this.state.time_passed)
+                            // console.log(this.state.progressBarPercentage)
+                            this.setState((prev_state) => ({
+                                time_passed: prev_state.time_passed + 1000,
+                                progressBarPercentage: prev_state.time_passed / prev_state.timeout * 100
+                            }))
+                        }, 1000),
+                        timeout: msg.content.timeout,
+                        time_passed: 0,
+                        isJudgePicking: msg.content.isJudgePicking,
+                        progressBarPercentage: 0
+                    })
+                    break
+                case "GAME_OVER":
+                    console.log(msg.content)
+                    // TODO: Show popups
+                    break
+                case "ROUND_TIMEOUT":
+                    console.log(msg.content.submissions)
+                    clearInterval(this.state.timer)
+                    this.setState({
+                        show_choosing_winning_card: true,
+                        submissions: msg.content.submissions.map(submission => new WhiteCard(submission.played_card)),
+                        timer: setInterval(() => {
+                            this.setState((prev_state) => ({
+                                time_passed: prev_state.time_passed + 1000,
+                                progressBarPercentage: prev_state.time_passed / prev_state.timeout * 100
+                            }))
+                        }, 1000),
+                        timeout: msg.content.timeout,
+                        time_passed: 0,
+                        isJudgePicking : msg.content.isJudgePicking,
+                        progressBarPercentage: 0
+                    })
+                    break
+                case "SCORE_UPDATED":
+                    this.resolveScoreUpdates(msg.content.players);
+                    break
+                default:
+                    break
+            }
+        }.bind(this))
+    }
+
+    componentWillUnmount() {
+        socket.close()
         clearInterval(this.state.timer)
     }
 
-    render()
-    {
+
+    isMeJudge(judgeId) { // Pass the msg.content.newJudgeID
+        return judgeId === socket.id
+    }
+
+    dismissMessage() {
+        this.setState({
+            show_message: false
+        })
+    }
+
+    render() {
         return (
             <>
-                <TimerProgressBar progress={this.state.progress} />
+                <TimerProgressBar progress={this.state.progressBarPercentage} />
                 <Container>
-                    <NavBar points={this.state.current_player.points} players={this.state.players} current_player={this.state.current_player} />
+                    <NavBar points={this.state.current_player.points} online_players={this.state.online_players} current_player={this.state.current_player} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     {/* TODO: Implement judge pick card on client side */}
-                    <Main gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.playedCards} isJudgePicking={this.state.isJudgePicking} isJudgeTurn={this.state.isJudgeTurn} isFirstPlayer={this.state.first_player} socket={this.socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
-                    <MessageBox messages={this.state.logs} show={false} />
+                    <Main gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.submissions} isJudgePicking={this.state.isJudgePicking} isJudge={this.state.isJudge} isFirstPlayer={this.state.is_first_player} socket={socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
+                    {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
+                    <MessageBox message={this.state.message} show={this.state.show_message} provokeParentDismiss={this.dismissMessage} />
+    
                 </Container>
             </>
         )

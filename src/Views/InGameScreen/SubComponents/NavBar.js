@@ -5,16 +5,15 @@ import Image from 'react-bootstrap/Image';
 import Badge from 'react-bootstrap/Badge';
 
 const NavBar = (props) => {
-    const playerNameItems = props.players.map((player) => {
+    const playerNameItems = props.online_players.map((player,index) => {
         if (player.name === props.current_player.name) {
             return (
-                <a className="p-2 font-weight-bold" href="#">{player.name}: {player.points}</a>)
+                <a className="p-2 font-weight-bold" href="#" key={index}>{player.name}: {player.points}</a>)
         } else {
             return (
-                <a className="p-2 text-muted" href="#">{player.name}: {player.points}</a>)
+                <a className="p-2 text-muted" href="#" key={index}>{player.name}: {player.points}</a>)
         }
-    }
-    )
+    })
     // TODO: Find new relevant emojis 
     return (
         <>
@@ -34,7 +33,7 @@ const NavBar = (props) => {
                         <Button variant="outline-secondary">
                             <div> Players</div>
                             <Image src="./assets/pug.svg" fluid />
-                            <Badge variant="primary" className="mx-1">{props.players.length}</Badge>
+                            <Badge variant="primary" className="mx-1">{props.online_players.length}</Badge>
                         </Button>
                     </div>
                 </div>

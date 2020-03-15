@@ -2,8 +2,8 @@ import React, { Component } from "react"
 import ShowPrompt from "./ShowPrompt"
 import CardDeck from "./CardDeck"
 import Button from 'react-bootstrap/Button';
-import LoadingMessage from "./Loading"
 import JudgeDeck from "./JudgeDeck"
+import Loading from "./Loading"
 class Main extends Component {
     constructor(props) {
         super(props)
@@ -13,7 +13,8 @@ class Main extends Component {
         this.btnStartGame = this.btnStartGame.bind(this);
     }
 
-    btnStartGame() {
+    btnStartGame()
+    {
         this.props.socket.emit('message', {
             type: 'GAME_START',
             content: "Hey Mr. Server! Please start the game!"
@@ -26,10 +27,11 @@ class Main extends Component {
             return (
                 <div className="d-flex flex-column align-items-center">
                     <ShowPrompt blackCard={this.props.blackCard} />
-                    {this.props.isJudgePicking ? <JudgeDeck isJudgeTurn={this.props.isJudgeTurn} playedCards={this.props.playedCards} /> : null }
-                    {this.props.isJudgeTurn ? 
-                    <LoadingMessage message="You are the Judge! Wait for everyone to pick a card first..." /> : 
-                    <CardDeck cardChosen={this.props.cardChosen} whiteCards={this.props.whiteCards} />}
+                    {this.props.isJudgePicking ? <JudgeDeck isJudge={this.props.isJudge} playedCards={this.props.playedCards} socket={this.props.socket}/> : null }
+                    {this.props.isJudge ? 
+                    <Loading message="You are the Judge! Wait for everyone to pick a card first..." /> : 
+                    <CardDeck cardChosen={this.props.cardChosen} whiteCards={this.props.whiteCards} socket={this.props.socket} />}
+                    {/* {this.props.isJudge ? <Loading message="You are the Judge! Wait for everyone to pick a card first..." /> : <CardDeck whiteCards={this.props.whiteCards} socket={this.props.socket}/>} */}
                 </div>
             )
         }
@@ -43,7 +45,7 @@ class Main extends Component {
             }
             else {
                 return (
-                    <LoadingMessage message="Waiting for host to start the game..." />
+                    <Loading message="Waiting for host to start the game..." />
                 )
             }
         }

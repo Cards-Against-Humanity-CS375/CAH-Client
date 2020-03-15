@@ -14,8 +14,8 @@ const ShowPrompt = (props) => {
     return (
         <>
             <div className="pb-3">
-                <Button variant="dark" onClick={handleShow}>
-                    Show black card
+                <Button variant="dark" onClick={handleShow} className="text-center justify-content-center">
+                    {props.blackCard.prompt}
                 </Button>
             </div>
 

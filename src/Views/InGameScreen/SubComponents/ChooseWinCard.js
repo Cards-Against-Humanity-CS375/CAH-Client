@@ -1,32 +1,19 @@
-import React, { Component } from "react";
+import React, { Component } from "react"
+
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 import Carousel from 'react-bootstrap/Carousel';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
-import Button from 'react-bootstrap/Button';
+import Loading from "./Loading"
 
-class JudgeDeck extends Component {
+class ChooseWinCard extends Component {
     constructor(props) {
         super(props)
     }
 
-    handleSubmit = (cardText) => {
-        if (this.props.isJudge) {
-            this.props.socket.emit('message', {
-                "type": "JUDGE_CHOSEN_CARD",
-                "content": {
-                    cardText: cardText,
-                }
-            });
-        } else {
-            console.log("You are not the judge!")
-        } 
-    }
-
     render() {
-        // TODO: Implement onClick function to emit "CARD_CHOSEN_JUDGE"
-        console.log(this.props.playedCards)
-        let playedCards = this.props.playedCards.filter(whiteCard => whiteCard.response)
-        let carouselItems = playedCards.map((whiteCard, index) => // whiteCard is a string.
+        const carouselItems = this.props.chosenWhiteCards.map((whiteCard, index) =>
             <Carousel.Item key={index}>
                 <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem' }}>
                     <Card.Body className="d-flex flex-column align-items-start">
@@ -41,20 +28,36 @@ class JudgeDeck extends Component {
                             Cards Against Humanity
                         </div>
                             <div className="col-4 pt-1 d-flex justify-content-end">
-                                <Button variant="outline-primary" onClick={() => this.handleSubmit(whiteCard.response)}>Choose</Button>
+                                <Button variant="outline-primary">Decide</Button>
                             </div>
                         </div>
                     </Card.Footer>
                 </Card>
             </Carousel.Item>
         )
-        return (
-            <>
-                <div>Here are the cards everyone played!</div>
-                <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
-            </>
-        )
+
+        if (this.props.show) {
+            if (this.props.isJudge) {
+                return (
+                    <Modal show={this.props.show} aria-labelledby="contained-modal-title-vcenter" centered>
+                        <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "18rem" }}>
+                            {carouselItems}
+                        </Carousel>
+                    </Modal>
+                )
+            }
+            else {
+                return (
+                    <Loading message="The Judge is deciding, please wait..." />
+                )
+            }
+        }
+        else {
+            return (
+                <></>
+            )
+        }
     }
 }
 
-export default JudgeDeck
+export default ChooseWinCard
