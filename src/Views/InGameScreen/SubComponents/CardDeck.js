@@ -3,10 +3,14 @@ import Carousel from 'react-bootstrap/Carousel';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
+import Loading from './Loading'
 
 class CardDeck extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            is_card_chosen: false
+        }
     }
 
     sendCardChosenMessage(chosenCard) {
@@ -17,6 +21,10 @@ class CardDeck extends Component {
                 "player_id": this.props.socket.id,
                 "chosen_card": chosenCard
             }
+        })
+
+        this.setState({
+            is_card_chosen: true
         })
     }
 
@@ -42,15 +50,28 @@ class CardDeck extends Component {
             </Card>
         </Carousel.Item>
     )
-    onSubmit = () => {
-        console.log("onsubmit called")
-    }
+
     render() {
-        return (<>
-        <div>Your cards:</div>
-        <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>
-            {this.carouselItems}
-        </Carousel></>)
+        if (!this.state.is_card_chosen) {
+            return (
+                <>
+                    <div>Your cards:</div>
+                    <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>
+                        {this.carouselItems}
+                    </Carousel>
+                </>
+            )
+        }
+        else {
+            if (this.props.isJudgePicking) {
+                return <></>
+            }
+            else {
+                return (
+                    <Loading message="Waiting for others to choose card..." />
+                )
+            }
+        }
     }
 }
 

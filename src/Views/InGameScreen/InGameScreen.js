@@ -46,13 +46,22 @@ class InGameScreen extends Component {
 
         this.dismissMessage = this.dismissMessage.bind(this)
     }
-    resolveScoreUpdates(players){
-        this.state.online_players.forEach((player,index) => {
-            player.points = players[index].score;
-            if (this.state.current_player.name === player.name) {
-                this.state.current_player.points = players[index].score;
-            }
+
+    resolveScoreUpdates(players) {
+        const clone_online_players = [...this.state.online_players]
+        const update_scores = clone_online_players.map((player, index) => {
+            player.points = players[index].score
+            return player
         })
+        this.setState({
+            online_players: update_scores
+        })
+        // this.state.online_players.forEach((player, index) => {
+        //     player.points = players[index].score;
+        //     if (this.state.current_player.name === player.name) {
+        //         this.state.current_player.points = players[index].score;
+        //     }
+        // })
     }
 
     UNSAFE_componentWillMount() {
@@ -150,7 +159,7 @@ class InGameScreen extends Component {
                         }, 1000),
                         timeout: msg.content.timeout,
                         time_passed: 0,
-                        isJudgePicking : msg.content.isJudgePicking,
+                        isJudgePicking: msg.content.isJudgePicking,
                         progressBarPercentage: 0
                     })
                     break
@@ -190,7 +199,7 @@ class InGameScreen extends Component {
                     <Main gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.submissions} isJudgePicking={this.state.isJudgePicking} isJudge={this.state.isJudge} isFirstPlayer={this.state.is_first_player} socket={socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     <MessageBox message={this.state.message} show={this.state.show_message} provokeParentDismiss={this.dismissMessage} />
-    
+
                 </Container>
             </>
         )

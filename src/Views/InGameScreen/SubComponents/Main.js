@@ -13,8 +13,7 @@ class Main extends Component {
         this.btnStartGame = this.btnStartGame.bind(this);
     }
 
-    btnStartGame()
-    {
+    btnStartGame() {
         this.props.socket.emit('message', {
             type: 'GAME_START',
             content: "Hey Mr. Server! Please start the game!"
@@ -27,10 +26,10 @@ class Main extends Component {
             return (
                 <div className="d-flex flex-column align-items-center">
                     <ShowPrompt blackCard={this.props.blackCard} />
-                    {this.props.isJudgePicking ? <JudgeDeck isJudge={this.props.isJudge} playedCards={this.props.playedCards} socket={this.props.socket}/> : null }
-                    {this.props.isJudge ? 
-                    <Loading message="You are the Judge! Wait for everyone to pick a card first..." /> : 
-                    <CardDeck cardChosen={this.props.cardChosen} whiteCards={this.props.whiteCards} socket={this.props.socket} />}
+                    {this.props.isJudgePicking ? <JudgeDeck isJudge={this.props.isJudge} playedCards={this.props.playedCards} socket={this.props.socket} /> : null}
+                    {this.props.isJudge ?
+                        this.props.isJudgePicking ? <></> : <Loading message="You are the Judge! Wait for everyone to pick a card first..." /> :
+                        <CardDeck isJudge={this.props.isJudge} isJudgePicking={this.props.isJudgePicking} cardChosen={this.props.cardChosen} whiteCards={this.props.whiteCards} socket={this.props.socket} />}
                     {/* {this.props.isJudge ? <Loading message="You are the Judge! Wait for everyone to pick a card first..." /> : <CardDeck whiteCards={this.props.whiteCards} socket={this.props.socket}/>} */}
                 </div>
             )

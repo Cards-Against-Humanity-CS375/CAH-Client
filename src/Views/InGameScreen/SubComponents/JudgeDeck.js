@@ -41,16 +41,16 @@ class JudgeDeck extends Component {
                             Cards Against Humanity
                         </div>
                             <div className="col-4 pt-1 d-flex justify-content-end">
-                                <Button variant="outline-primary" onClick={() => this.handleSubmit(whiteCard.response)}>Choose</Button>
+                                {this.props.isJudge ? <Button variant="outline-primary" onClick={() => this.handleSubmit(whiteCard.response)}>Decide</Button> : <></>}
                             </div>
                         </div>
                     </Card.Footer>
-                </Card>
+                </Card> 
             </Carousel.Item>
         )
         return (
             <>
-                <div>Here are the cards everyone played!</div>
+                {this.props.isJudge ? <div>Here are the cards everyone played! Let's decide! </div> : <div>Here are the cards everyone played! Waiting for judgement... </div>}
                 <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
             </>
         )
