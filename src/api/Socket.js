@@ -1,6 +1,6 @@
 import socketIOClient from "socket.io-client";
 
-const endpoint = 'http://localhost:3001'
+const endpoint = 'https://fast-sands-73377.herokuapp.com'
 
 const socket = socketIOClient(endpoint)
 
