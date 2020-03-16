@@ -5,6 +5,7 @@ import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Modal from 'react-bootstrap/Modal';
+const isTouchDevice = require('is-touch-device');
 
 class JudgeDeck extends Component {
     constructor(props) {
@@ -52,12 +53,14 @@ class JudgeDeck extends Component {
                     </Card.Body>
                     <Card.Footer className="text-muted">
                         <div className="row flex-nowrap justify-content-between align-items-center">
-                            <div className="col-8 pt-1">
+                            <div className="col-12 pt-1 d-flex-inline flex-column text-center">
                                 <Image src="./assets/cah.svg" width="20" height="20" />
                             Cards Against Humanity
+                            </div>
                         </div>
-                            <div className="col-4 pt-1 d-flex justify-content-end">
-                                {this.props.isJudge ? <Button variant="outline-primary" onClick={() => this.handleSubmit(whiteCard.response)}>Decide</Button> : <></>}
+                        <div className="row flex-nowrap justify-content-between align-items-center">
+                            <div className="col-12 pt-1 mt-3 d-flex flex-column">
+                                {this.props.isJudge ? <Button variant="danger" onClick={() => this.handleSubmit(whiteCard.response)}>Choose</Button> : <></>}
                             </div>
                         </div>
                     </Card.Footer>
@@ -76,17 +79,17 @@ class JudgeDeck extends Component {
                         <div>Here are the cards everyone played! Waiting for judgement... </div>
                     </Alert>
                 }
-                <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
+                <Carousel controls={false} slide={true} indicators={true} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
                 <Modal show={this.state.is_decided} onHide={this.handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
-                    <Modal.Header closeButton>
+                    <Modal.Header>
                         <Modal.Title>You're amazing!</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>Decision sending to other players... You're rock!!!</Modal.Body>
-                    <Modal.Footer>
+                    {/* <Modal.Footer>
                         <Button variant="secondary" onClick={this.handleClose}>
                             Close
                         </Button>
-                    </Modal.Footer>
+                    </Modal.Footer> */}
                 </Modal>
             </>
         )

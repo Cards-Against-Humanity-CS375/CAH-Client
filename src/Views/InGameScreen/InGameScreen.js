@@ -6,6 +6,8 @@ import NavBar from "./SubComponents/NavBar"
 import MessageBox from "./SubComponents/MessageBox"
 import Main from "./SubComponents/Main"
 import AnnounceWinner from "./SubComponents/AnnounceWinner"
+import WinGame from "./SubComponents/WinGame"
+import CantJoin from "./SubComponents/CantJoin"
 import Player from "../../Models/Player"
 import WhiteCard from "../../Models/WhiteCard"
 import BlackCard from "../../Models/BlackCard"
@@ -44,12 +46,16 @@ class InGameScreen extends Component {
             submissions: [],
             should_announce_winner: false,
             didWon: false,
-            is_card_chosen: false
+            is_card_chosen: false,
+            game_won: false,
+            can_join: true,
+            show_game_result: false
         }
 
         this.dismissMessage = this.dismissMessage.bind(this)
         this.dismissCloseWinMessage = this.dismissCloseWinMessage.bind(this)
         this.changeCardChosenState = this.changeCardChosenState.bind(this)
+        this.removeChosenWhiteCard = this.removeChosenWhiteCard.bind(this)
     }
 
     resolveScoreUpdates(playerIdAndScores) {
@@ -91,6 +97,12 @@ class InGameScreen extends Component {
     componentDidMount() {
         socket.on('message', function (msg) {
             switch (msg.type) {
+                case "CANT_JOIN":
+                    console.log(msg.content)
+                    this.setState({
+                        can_join: false
+                    })
+                    break
                 case "PLAYERS_UPDATED":
                     console.log(msg.content)
                     const players_on_server = msg.content.players
@@ -123,12 +135,13 @@ class InGameScreen extends Component {
                         gameOn: true,
                         whiteCards: cards,
                     }))
-                    console.log(this.state.whiteCards) // Expect array of 5 objects.
+                    // console.log(this.state.whiteCards) // Expect array of 5 objects.
                     break
                 case "NEW_ROUND":
                     console.log("The new judge is:", msg.content.newJudgeID, ", the current socket ID is:", socket.id)
                     clearInterval(this.state.timer)
-                    this.setState({
+                    console.log(msg.content.newWhiteCard)
+                    this.setState((prev_state) => ({
                         isJudge: this.isMeJudge(msg.content.newJudgeID),
                         blackCard: msg.content.blackCard,
                         timer: setInterval(() => {
@@ -147,12 +160,17 @@ class InGameScreen extends Component {
                         didWon: false,
                         submissions: [],
                         should_announce_winner: false,
-                        is_card_chosen: false
-                    })
+                        is_card_chosen: false,
+                        whiteCards: [...prev_state.whiteCards, new WhiteCard(msg.content.newWhiteCard.response)]
+                    }))
+                    console.log(this.state.whiteCards)
                     break
                 case "GAME_OVER":
                     console.log(msg.content)
-                    // TODO: Show popups
+                    this.setState({
+                        game_won: msg.content.didWon,
+                        show_game_result: true
+                    })
                     break
                 case "ROUND_TIMEOUT":
                     console.log(msg.content.submissions)
@@ -230,6 +248,14 @@ class InGameScreen extends Component {
         })
     }
 
+    removeChosenWhiteCard(chosenCard) {
+        const remainingCards = this.state.whiteCards.filter(whiteCard => whiteCard.response !== chosenCard.response)
+        console.log(remainingCards)
+        this.setState({
+            whiteCards: remainingCards
+        })
+    }
+
     render() {
         return (
             <>
@@ -238,10 +264,12 @@ class InGameScreen extends Component {
                     <NavBar points={this.state.current_player.points} online_players={this.state.online_players} current_player={this.state.current_player} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     {/* TODO: Implement judge pick card on client side */}
-                    <Main provokeChangeIsCardChosenState={this.changeCardChosenState} is_card_chosen={this.state.is_card_chosen} gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.submissions} isJudgePicking={this.state.isJudgePicking} isJudge={this.state.isJudge} isFirstPlayer={this.state.is_first_player} socket={socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
+                    <Main provokeRemoveChosenWhiteCard={this.removeChosenWhiteCard} provokeChangeIsCardChosenState={this.changeCardChosenState} is_card_chosen={this.state.is_card_chosen} gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.submissions} isJudgePicking={this.state.isJudgePicking} isJudge={this.state.isJudge} isFirstPlayer={this.state.is_first_player} socket={socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     <MessageBox message={this.state.message} show={this.state.show_message} provokeParentDismiss={this.dismissMessage} />
                     {!this.state.isJudge ? <AnnounceWinner show={this.state.should_announce_winner} won={this.state.didWon} provokeParentCloseWinMessage={this.dismissCloseWinMessage} /> : <></>}
+                    <WinGame show={this.state.show_game_result} won={this.state.game_won} />
+                    <CantJoin show={!this.state.can_join} />
                 </Container>
             </>
         )

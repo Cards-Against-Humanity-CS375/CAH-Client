@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import Alert from "react-bootstrap/Alert"
 
-class AnnounceWinner extends Component {
+class CantJoin extends Component {
     constructor(props) {
         super(props)
     }
@@ -14,16 +14,11 @@ class AnnounceWinner extends Component {
                 <Modal.Header>
                     <Modal.Title>Result</Modal.Title>
                 </Modal.Header>
-                {this.props.won ? <Alert variant="success">"Woohoo, you won this round!"</Alert> : <Alert variant="danger">"Boooooo! You lost this round!"</Alert>}
-                {/* <Modal.Footer>
-                    <Button variant="secondary" onClick={this.props.provokeParentCloseWinMessage}>
-                        Close
-                    </Button>
-                </Modal.Footer> */}
+                <Alert variant="danger">The game is going on! Please join later...</Alert>
             </Modal>
         )
     }
 
 }
 
-export default AnnounceWinner
+export default CantJoin

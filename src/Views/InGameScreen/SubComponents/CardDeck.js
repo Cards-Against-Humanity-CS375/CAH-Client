@@ -5,6 +5,8 @@ import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Loading from './Loading'
+const uniqid = require('uniqid');
+const isTouchDevice = require('is-touch-device');
 
 class CardDeck extends Component {
     constructor(props) {
@@ -29,43 +31,47 @@ class CardDeck extends Component {
         })
 
         this.props.provokeParentChangeIsCardChosenState()
+        this.props.provokeParentRemoveChosenWhiteCard(chosenCard)
     }
 
-    carouselItems = this.props.whiteCards.map((whiteCard, index) =>
-        <Carousel.Item key={index}>
-            <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem' }}>
-                <Card.Body className="d-flex flex-column align-items-start">
-                    <Card.Text>
-                        {whiteCard.response}
-                    </Card.Text>
-                </Card.Body>
-                <Card.Footer className="text-muted">
-                    <div className="row flex-nowrap justify-content-between align-items-center">
-                        <div className="col-8 pt-1">
-                            <Image src="./assets/cah.svg" width="20" height="20" />
+    render() {
+        const carouselItems = this.props.whiteCards.map((whiteCard, index) =>
+            <Carousel.Item key={whiteCard.response + `${index}` + uniqid()}>
+                <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem' }}>
+                    <Card.Body className="d-flex flex-column align-items-start">
+                        <Card.Text>
+                            {whiteCard.response}
+                        </Card.Text>
+                    </Card.Body>
+                    <Card.Footer className="text-muted">
+                        <div className="row flex-nowrap justify-content-between align-items-center">
+                            <div className="col-12 pt-1 d-flex-inline flex-column text-center">
+                                <Image src="./assets/cah.svg" width="20" height="20" />
                             Cards Against Humanity
                         </div>
-                        <div className="col-4 pt-1 d-flex justify-content-end">
-                            <Button variant="outline-primary" onClick={() => this.sendCardChosenMessage(whiteCard)}>Choose</Button>
                         </div>
-                    </div>
-                </Card.Footer>
-            </Card>
-        </Carousel.Item>
-    )
+                        <div className="row flex-nowrap justify-content-between align-items-center">
+                            <div className="col-12 pt-1 mt-3 d-flex flex-column">
+                                <Button variant="primary" onClick={() => this.sendCardChosenMessage(whiteCard)}>Choose</Button>
+                            </div>
+                        </div>
+                    </Card.Footer>
+                </Card>
+            </Carousel.Item>
+        )
 
-    render() {
         if (!this.props.is_card_chosen) {
             return (
                 <>
                     <div>
                         <Alert variant="primary"> Your cards:</Alert>
                     </div>
-                    <Carousel controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}>
-                        {this.carouselItems}
+                    {/* <Carousel extraData={this.props.whiteCards} controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}> */}
+                    <Carousel slide={true} indicators={true} interval={10000} style={{ width: "21rem" }}>
+                        {carouselItems}
                     </Carousel>
                 </>
-            ) 
+            )
         }
         else {
             if (this.props.isJudgePicking) {

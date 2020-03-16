@@ -21,7 +21,7 @@ const NavBar = (props) => {
                 <div className="row flex-nowrap justify-content-between align-items-center">
                     <div className="col-4 pt-1">
                         <Button variant="outline-secondary">
-                            {/* <div>My score:</div> */}
+                            <small>Score</small>
                             <Image src="./assets/crown.svg" fluid />
                             <Badge variant="warning" className="mx-1">{props.points}</Badge>
                         </Button>
@@ -31,7 +31,7 @@ const NavBar = (props) => {
                     </div>
                     <div className="col-4 pt-1 d-flex justify-content-end align-items-center">
                         <Button variant="outline-secondary">
-                            {/* <div> Players</div> */}
+                            <small>Players</small>
                             <Image src="./assets/pug.svg" fluid />
                             <Badge variant="primary" className="mx-1">{props.online_players.length}</Badge>
                         </Button>

@@ -12,6 +12,7 @@ class Main extends Component {
         // This binding is necessary to make `this` work in the callback
         this.btnStartGame = this.btnStartGame.bind(this);
         this.provokeParentParentChangeIsCardChosenState = this.provokeParentParentChangeIsCardChosenState.bind(this)
+        this.provokeParentParentRemoveChosenWhiteCard = this.provokeParentParentRemoveChosenWhiteCard.bind(this)
     }
 
     btnStartGame() {
@@ -25,6 +26,10 @@ class Main extends Component {
         this.props.provokeChangeIsCardChosenState()
     }
 
+    provokeParentParentRemoveChosenWhiteCard(chosenCard) {
+        this.props.provokeRemoveChosenWhiteCard(chosenCard)
+    }
+
     render() { // TODO: Need to check 2 bool values : Is it the judge's turn, and is it time for the judge to pick yet. 2 states.
         // TODO: Make separate component <JudgeChooseDeck>
         if (this.props.gameOn) {
@@ -34,7 +39,7 @@ class Main extends Component {
                     {this.props.isJudgePicking ? <JudgeDeck isJudge={this.props.isJudge} playedCards={this.props.playedCards} socket={this.props.socket} /> : null}
                     {this.props.isJudge ?
                         this.props.isJudgePicking ? <></> : <Loading message="You are the Judge! Wait for everyone to pick a card first..." /> :
-                        <CardDeck provokeParentChangeIsCardChosenState={this.provokeParentParentChangeIsCardChosenState} is_card_chosen={this.props.is_card_chosen} isJudge={this.props.isJudge} isJudgePicking={this.props.isJudgePicking} cardChosen={this.props.cardChosen} whiteCards={this.props.whiteCards} socket={this.props.socket} />}
+                        <CardDeck provokeParentRemoveChosenWhiteCard={this.provokeParentParentRemoveChosenWhiteCard} provokeParentChangeIsCardChosenState={this.provokeParentParentChangeIsCardChosenState} is_card_chosen={this.props.is_card_chosen} isJudge={this.props.isJudge} isJudgePicking={this.props.isJudgePicking} cardChosen={this.props.cardChosen} whiteCards={this.props.whiteCards} socket={this.props.socket} />}
                     {/* {this.props.isJudge ? <Loading message="You are the Judge! Wait for everyone to pick a card first..." /> : <CardDeck whiteCards={this.props.whiteCards} socket={this.props.socket}/>} */}
                 </div>
             )
