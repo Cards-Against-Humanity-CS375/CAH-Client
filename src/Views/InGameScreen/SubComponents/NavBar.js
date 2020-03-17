@@ -5,8 +5,10 @@ import Image from 'react-bootstrap/Image';
 import Badge from 'react-bootstrap/Badge';
 
 const NavBar = (props) => {
+    let current_score;
     const playerNameItems = props.online_players.map((player, index) => {
         if (player.name === props.current_player.name) {
+            current_score = player.points;
             return (
                 <a className="p-2 font-weight-bold" href="#" key={index}>{player.name}: {player.points}</a>)
         } else {
@@ -23,7 +25,7 @@ const NavBar = (props) => {
                         <Button variant="outline-secondary">
                             <small>Score</small>
                             <Image src="./assets/crown.svg" fluid />
-                            <Badge variant="warning" className="mx-1">{props.points}</Badge>
+                            <Badge variant="warning" className="mx-1">{current_score}</Badge>
                         </Button>
                     </div>
                     <div className="col-4 text-center">

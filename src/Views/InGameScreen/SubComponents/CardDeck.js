@@ -37,7 +37,7 @@ class CardDeck extends Component {
     render() {
         const carouselItems = this.props.whiteCards.map((whiteCard, index) =>
             <Carousel.Item key={whiteCard.response + `${index}` + uniqid()}>
-                <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem' }}>
+                <Card className="mb-4 box-shadow h-md-250" border="dark" style={{ height: '26rem', boxShadow: "-0.2rem 0.09rem 0.5rem grey" }}>
                     <Card.Body className="d-flex flex-column align-items-start">
                         <Card.Text>
                             {whiteCard.response}
@@ -67,7 +67,7 @@ class CardDeck extends Component {
                         <Alert variant="primary"> Your cards:</Alert>
                     </div>
                     {/* <Carousel extraData={this.props.whiteCards} controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}> */}
-                    <Carousel slide={true} indicators={true} interval={10000} style={{ width: "21rem" }}>
+                    <Carousel className="sha" slide={true} controls={true} indicators={true} interval={9500} style={{ width: "21rem" }}>
                         {carouselItems}
                     </Carousel>
                 </>

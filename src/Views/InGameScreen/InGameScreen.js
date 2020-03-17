@@ -161,7 +161,7 @@ class InGameScreen extends Component {
                         submissions: [],
                         should_announce_winner: false,
                         is_card_chosen: false,
-                        whiteCards: [...prev_state.whiteCards, new WhiteCard(msg.content.newWhiteCard.response)]
+                        // whiteCards: [...prev_state.whiteCards, new WhiteCard(msg.content.newWhiteCard.response)]
                     }))
                     console.log(this.state.whiteCards)
                     break
