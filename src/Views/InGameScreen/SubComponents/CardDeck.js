@@ -17,7 +17,6 @@ class CardDeck extends Component {
     }
 
     sendCardChosenMessage(chosenCard) {
-        console.log("sending message: ", chosenCard)
         this.props.socket.emit('message', {
             "type": "CARD_CHOSEN",
             "content": {

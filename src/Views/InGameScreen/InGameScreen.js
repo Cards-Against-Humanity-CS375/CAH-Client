@@ -21,7 +21,6 @@ import socket from '../../api/Socket'
 class InGameScreen extends Component {
     constructor(props) {
         super(props)
-        // console.log(this.props.location.state.current_player)
         this.state = {
             current_player_name: this.props.location.state.current_player_name,
             current_player_id: "",
@@ -133,13 +132,11 @@ class InGameScreen extends Component {
         socket.on('message', function (msg) {
             switch (msg.type) {
                 case "CANT_JOIN":
-                    console.log(msg.content)
                     this.setState({
                         can_join: false
                     })
                     break
                 case "PLAYERS_UPDATED":
-                    console.log(msg.content)
                     const players_on_server = msg.content.players
 
                     const result = players_on_server.map(player_on_server => new Player(player_on_server.id, player_on_server.name))
@@ -149,40 +146,30 @@ class InGameScreen extends Component {
                     })
                     break
                 case "FIRST_PLAYER_RIGHTS":
-                    console.log(msg.content)
                     this.setState({
                         is_first_player: msg.content.first_player
                     })
                     break
                 case "MISSING_PLAYERS":
-                    console.log(msg.content)
                     this.setState({
                         message: msg.content,
                         show_message: true
                     })
                     break
                 case "GAME_START":
-                    console.log(msg.content)
                     // setGameOver(prev_gameOver => false)
                     const cards = msg.content.cards.map((cardObj => new WhiteCard(cardObj.response)))
-                    console.log(cards)
                     this.setState(() => ({
                         gameOn: true,
                         whiteCards: cards,
                     }))
-                    // console.log(this.state.whiteCards) // Expect array of 5 objects.
                     break
                 case "NEW_ROUND":
-                    console.log("The new judge is:", msg.content.newJudgeID, ", the current socket ID is:", socket.id)
                     clearInterval(this.state.timer)
-                    console.log(msg.content.newWhiteCard)
                     this.setState((prev_state) => ({
                         isJudge: this.isMeJudge(msg.content.newJudgeID),
                         blackCard: msg.content.blackCard,
                         timer: setInterval(() => {
-                            // console.log(this.state.timeout)
-                            // console.log(this.state.time_passed)
-                            // console.log(this.state.progressBarPercentage)
                             this.setState((prev_state) => ({
                                 time_passed: prev_state.time_passed + 1000,
                                 progressBarPercentage: prev_state.time_passed / prev_state.timeout * 100
@@ -198,17 +185,14 @@ class InGameScreen extends Component {
                         is_card_chosen: false,
                         whiteCards: [...prev_state.whiteCards, new WhiteCard(msg.content.newWhiteCard.response)]
                     }))
-                    console.log(this.state.whiteCards)
                     break
                 case "GAME_OVER":
-                    console.log(msg.content)
                     this.setState({
                         game_won: msg.content.didWon,
                         show_game_result: true
                     })
                     break
                 case "ROUND_TIMEOUT":
-                    console.log(msg.content.submissions)
                     clearInterval(this.state.timer)
                     this.setState({
                         show_choosing_winning_card: true,
@@ -251,7 +235,6 @@ class InGameScreen extends Component {
                     })
                     break
                 case "RESET_GAME":
-                    console.log("Hi")
                     this.resetGame();
                     break
                 default:
@@ -290,7 +273,6 @@ class InGameScreen extends Component {
 
     removeChosenWhiteCard(chosenCard) {
         const remainingCards = this.state.whiteCards.filter(whiteCard => whiteCard.response !== chosenCard.response)
-        console.log(remainingCards)
         this.setState({
             whiteCards: remainingCards
         })

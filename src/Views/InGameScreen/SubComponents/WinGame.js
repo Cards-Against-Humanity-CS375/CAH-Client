@@ -8,7 +8,6 @@ class WinGame extends Component {
         super(props)
     }
     sendResetGame() {
-        console.log("Hello")
         this.props.socket.emit('message', {
             "type": "RESET_GAME",
         })
