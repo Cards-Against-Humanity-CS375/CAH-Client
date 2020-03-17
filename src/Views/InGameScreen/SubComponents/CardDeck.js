@@ -67,7 +67,7 @@ class CardDeck extends Component {
                         <Alert variant="primary"> Your cards:</Alert>
                     </div>
                     {/* <Carousel extraData={this.props.whiteCards} controls={false} slide={true} indicators={false} interval={1000000} style={{ width: "21rem" }}> */}
-                    <Carousel className="sha" slide={true} controls={true} indicators={true} interval={9500} style={{ width: "21rem" }}>
+                    <Carousel nextIcon={<Image src="./assets/arrow-right.svg" fluid />} prevIcon={<Image src="./assets/arrow-left.svg" fluid />} className="sha" slide={true} controls={true} indicators={true} interval={9500} style={{ width: "21rem" }}>
                         {carouselItems}
                     </Carousel>
                 </>

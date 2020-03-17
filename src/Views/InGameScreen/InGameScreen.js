@@ -26,30 +26,31 @@ class InGameScreen extends Component {
             current_player_name: this.props.location.state.current_player_name,
             current_player_id: "",
             current_player: new Player(undefined, this.props.location.state.current_player_name),
-            blackCard: new BlackCard(""),
-            whiteCards: [],
+            blackCard: new BlackCard(""), //reset
+            whiteCards: [], //reset
             online_players: [],
-            timer: undefined,
-            timeout: 0,
-            message: "",
-            gameOn: false,
-            isJudge: false,
-            progressBarPercentage: 0,
-            time_passed: 0,
+            timer: undefined, //reset
+            timeout: 0, //reset
+            message: "", //reset
+            gameOn: false, //reset
+            isJudge: false, //reset
+            progressBarPercentage: 0, //reset
+            time_passed: 0, //reset
             // first_player: false,
-            cardChosen: false,
-            isJudgePicking: false,
+            cardChosen: false, //reset
+            isJudgePicking: false, //reset
             // playedCards: [],
             is_first_player: false,
-            show_message: false,
-            show_choosing_winning_card: false,
-            submissions: [],
-            should_announce_winner: false,
-            didWon: false,
-            is_card_chosen: false,
-            game_won: false,
-            can_join: true,
-            show_game_result: false
+            show_message: false, //reset
+            winning_card: "", //reset
+            show_choosing_winning_card: false, //reset
+            submissions: [], //reset
+            should_announce_winner: false, //reset
+            didWon: false, //reset
+            is_card_chosen: false, //reset
+            game_won: false, //reset
+            can_join: true, //reset
+            show_game_result: false //reset
         }
 
         this.dismissMessage = this.dismissMessage.bind(this)
@@ -73,6 +74,40 @@ class InGameScreen extends Component {
         //         this.state.current_player.points = players[index].score;
         //     }
         // }) 
+    }
+
+    resetGame(){
+        const clone_online_players = [...this.state.online_players]
+        const update_scores = clone_online_players.map((player, index) => {
+            player.points = 0
+            return player
+        })
+        this.setState({
+            online_players: update_scores
+        })
+        this.setState({
+            blackCard: new BlackCard(""), //reset
+            whiteCards: [],
+            timer: undefined, //reset
+            timeout: 0, //reset
+            message: "", //reset
+            gameOn: false, //reset
+            isJudge: false, //reset
+            progressBarPercentage: 0, //reset
+            time_passed: 0, //reset  
+            cardChosen: false, //reset
+            isJudgePicking: false, //reset
+            show_message: false, //reset
+            winning_card: "", //reset
+            show_choosing_winning_card: false, //reset
+            submissions: [], //reset
+            should_announce_winner: false, //reset
+            didWon: false, //reset
+            is_card_chosen: false, //reset
+            game_won: false, //reset
+            can_join: true, //reset
+            show_game_result: false //reset
+        })
     }
 
     UNSAFE_componentWillMount() {
@@ -202,6 +237,7 @@ class InGameScreen extends Component {
                         }
                     })
                     this.setState({
+                        winning_card: msg.content.cardText,
                         should_announce_winner: true,
                         didWon: won,
                         timer: setInterval(() => {
@@ -213,6 +249,10 @@ class InGameScreen extends Component {
                         timeout: msg.content.timeout,
                         time_passed: 0,
                     })
+                    break
+                case "RESET_GAME":
+                    console.log("Hi")
+                    this.resetGame();
                     break
                 default:
                     break
@@ -260,15 +300,15 @@ class InGameScreen extends Component {
         return (
             <>
                 <TimerProgressBar progress={this.state.progressBarPercentage} />
-                <Container>
+                <Container> 
                     <NavBar points={this.state.current_player.points} online_players={this.state.online_players} current_player={this.state.current_player} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     {/* TODO: Implement judge pick card on client side */}
                     <Main provokeRemoveChosenWhiteCard={this.removeChosenWhiteCard} provokeChangeIsCardChosenState={this.changeCardChosenState} is_card_chosen={this.state.is_card_chosen} gameOn={this.state.gameOn} cardChosen={this.state.cardChosen} playedCards={this.state.submissions} isJudgePicking={this.state.isJudgePicking} isJudge={this.state.isJudge} isFirstPlayer={this.state.is_first_player} socket={socket} whiteCards={this.state.whiteCards} blackCard={this.state.blackCard} />
                     {/* Make sure there is a message component below to check if there are enough players (Ex. Players needed left: 2) */}
                     <MessageBox message={this.state.message} show={this.state.show_message} provokeParentDismiss={this.dismissMessage} />
-                    {!this.state.isJudge ? <AnnounceWinner show={this.state.should_announce_winner} won={this.state.didWon} provokeParentCloseWinMessage={this.dismissCloseWinMessage} /> : <></>}
-                    <WinGame show={this.state.show_game_result} won={this.state.game_won} />
+                    {!this.state.isJudge ? <AnnounceWinner winning_card={this.state.winning_card} show={this.state.should_announce_winner} won={this.state.didWon} provokeParentCloseWinMessage={this.dismissCloseWinMessage} /> : <></>}
+                    <WinGame show={this.state.show_game_result} won={this.state.game_won} socket={socket} isFirstPlayer={this.state.is_first_player} />
                     <CantJoin show={!this.state.can_join} />
                 </Container>
             </>

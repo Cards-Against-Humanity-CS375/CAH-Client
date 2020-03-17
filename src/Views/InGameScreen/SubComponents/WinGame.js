@@ -7,6 +7,12 @@ class WinGame extends Component {
     constructor(props) {
         super(props)
     }
+    sendResetGame() {
+        console.log("Hello")
+        this.props.socket.emit('message', {
+            "type": "RESET_GAME",
+        })
+    }
 
     render() {
         return (
@@ -20,6 +26,7 @@ class WinGame extends Component {
                         Close
                     </Button>
                 </Modal.Footer> */}
+                {this.props.isFirstPlayer ? <Button variant="primary" onClick={()=> this.sendResetGame()}>Reset Game</Button> : null}
             </Modal>
         )
     }

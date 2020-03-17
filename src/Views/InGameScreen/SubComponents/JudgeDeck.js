@@ -79,7 +79,7 @@ class JudgeDeck extends Component {
                         <div>Here are the cards everyone played! Waiting for judgement... </div>
                     </Alert>
                 }
-                <Carousel controls={false} slide={true} indicators={true} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
+                <Carousel nextIcon={<Image src="./assets/arrow-right.svg" fluid />} prevIcon={<Image src="./assets/arrow-left.svg" fluid />} controls={true} slide={true} indicators={true} interval={1000000} style={{ width: "21rem" }}>{carouselItems}</Carousel>
                 <Modal show={this.state.is_decided} onHide={this.handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
                     <Modal.Header>
                         <Modal.Title>You're amazing!</Modal.Title>
