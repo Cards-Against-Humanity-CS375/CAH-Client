@@ -84,7 +84,7 @@ class JudgeDeck extends Component {
                     <Modal.Header>
                         <Modal.Title>You're amazing!</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Decision sending to other players... You're rock!!!</Modal.Body>
+                    <Modal.Body>Decision sending to other players... You rock!!!</Modal.Body>
                     {/* <Modal.Footer>
                         <Button variant="secondary" onClick={this.handleClose}>
                             Close
