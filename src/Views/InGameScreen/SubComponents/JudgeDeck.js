@@ -26,7 +26,6 @@ class JudgeDeck extends Component {
                 }
             });
         } else {
-            console.log("You are not the judge!")
         }
         this.setState({
             is_decided: true
@@ -40,8 +39,6 @@ class JudgeDeck extends Component {
     }
 
     render() {
-        // TODO: Implement onClick function to emit "CARD_CHOSEN_JUDGE"
-        // console.log(this.props.playedCards)
         let playedCards = this.props.playedCards.filter(whiteCard => whiteCard.response)
         let carouselItems = playedCards.map((whiteCard, index) => // whiteCard is a string.
             <Carousel.Item key={index}>
